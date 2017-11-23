@@ -81,10 +81,6 @@ add_cmd("connect",function(line,msg)
 	msg.reply("steam://connect/195.2.252.214:27015 <- Click to connect")
 },'all')
 
-add_cmd("aaaaaaaaa",function(line,msg)
-{
-	msg.reply("steam://connect/195.2.252.214:27015 <- Click to connect")
-},'all')
   
 add_cmd("clear",function(line,msg)
 {
