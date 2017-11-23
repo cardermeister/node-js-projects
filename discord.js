@@ -25,7 +25,7 @@ function call_cmd(cmd,line,msg)
 	{
 		//console.log(cmds[cmd])
 		var ValidRole = msg.channel.guild.roles.find("name",cmds[cmd].role)
-		if(ValidRole && ValidRole.members.get(msg.author.id))
+		if( ( cmds[cmd].role=="all" ) || ( ValidRole && ValidRole.members.get(msg.author.id) ) )
 		{
 			cmds[cmd].func(line,msg)
 		}
@@ -71,8 +71,8 @@ add_cmd("raw",function(line,msg)
 
 add_cmd("connect",function(line,msg)
 {
-	msg.reply("steam://connect/195.2.252.214:27015")
-},'dev')
+	msg.reply("steam://connect/195.2.252.214:27015 <- Click to connect")
+},'all')
 
   
 add_cmd("clear",function(line,msg)
