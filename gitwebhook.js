@@ -43,7 +43,7 @@ function GitPull(workdir,event,rep_name)
 	})
 	.stash("apply")
 	.exec(() => {
-		console.log("git stash apply")
+		console.log("git stash apply "+rep_name)
 		if(rep_name=="node-js-projects")exec2shell("chmod 764 ~/node-js-projects/fever.sh; ~/node-js-projects/fever.sh start")
 	})
 }
