@@ -49,7 +49,7 @@ handler.on('push', function (event) {
 	
 	if(work_dirs[workdir])
 	{
-		GitPull(work_dirs[workdir],event)
+		GitPull(work_dirs[workdir],event) 
 	}
 	
 }) 	
