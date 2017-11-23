@@ -1,4 +1,4 @@
-//test
+
 const Discord = require("discord.js");
 const client = new Discord.Client();
 
@@ -76,11 +76,15 @@ add_cmd("raw",function(line,msg)
 	discord_lua(line,msg)
 },'dev')
 
-add_cmd("connecta",function(line,msg)
+add_cmd("connect",function(line,msg)
 {
 	msg.reply("steam://connect/195.2.252.214:27015 <- Click to connect")
 },'all')
 
+add_cmd("aaaaaaaaa",function(line,msg)
+{
+	msg.reply("steam://connect/195.2.252.214:27015 <- Click to connect")
+},'all')
   
 add_cmd("clear",function(line,msg)
 {
