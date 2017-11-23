@@ -62,7 +62,7 @@ add_cmd("print",function(line,msg)
 	line = "print("+line+")"
 	discord_lua(line,msg)
 },'dev')
-
+ 
 add_cmd("table",function(line,msg)
 {
 	line = "PrintTable("+line+")"
