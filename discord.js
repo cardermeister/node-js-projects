@@ -76,7 +76,7 @@ add_cmd("raw",function(line,msg)
 	discord_lua(line,msg)
 },'dev')
 
-add_cmd("connect",function(line,msg)
+add_cmd("connecta",function(line,msg)
 {
 	msg.reply("steam://connect/195.2.252.214:27015 <- Click to connect")
 },'all')
