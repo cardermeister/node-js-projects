@@ -45,7 +45,7 @@ function GitPull(workdir,event,rep_name)
 		if(rep_name=="node-js-projects")
 		{
 			exec2shell("forever stopall; chmod 764 ~/node-js-projects/fever.sh;")	
-			exec2shell("~/node-js-projects/fever.sh start")
+			exec2shell("screen -dm ~/node-js-projects/fever.sh start")
 		}
 	})
 }
