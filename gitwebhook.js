@@ -37,13 +37,12 @@ function GitPull(workdir,event,rep_name)
 	
 			fs.writeFile(config.gitwebhook.lua_data, JSON.stringify(Object.assign(event,update)), (error) => {})
 			exec2shell("~/con.sh echo_git_commit")
-			
-			if(rep_name=="node-js-projects")exec2shell("forever stopall; chmod 764 ~/node-js-projects/fever.sh; ~/node-js-projects/fever.sh start")	
-	
+
 	})
 	.stash("apply")
 	.exec(() => {
-		console.log("git stash apply "+rep_name)
+		console.log("git stash apply")
+		if(rep_name=="node-js-projects")exec2shell("forever stopall; chmod 764 ~/node-js-projects/fever.sh; ~/node-js-projects/fever.sh start")
 	})
 }
  
