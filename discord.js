@@ -51,6 +51,12 @@ add_cmd("l",function(line,msg)
 	discord_lua(line,msg)
 },'dev')
 
+add_cmd("say",function(line,msg)
+{
+	line = "Say'"+line+"'"
+	discord_lua(line,msg)
+},'dev')
+
 add_cmd("print",function(line,msg)
 {
 	line = "print("+line+")"
