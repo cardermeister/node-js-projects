@@ -29,8 +29,6 @@ var work_dirs = config.gitwebhook.work_dirs
 
 function GitPull(workdir,event,rep_name)
 {
-	if(rep_name=="node-js-projects")exec2shell("forever stopall")
-	
 	console.log("git pull ("+workdir+")")
 	simpleGit.cwd(workdir)
 	.stash()
@@ -39,7 +37,9 @@ function GitPull(workdir,event,rep_name)
 	
 			fs.writeFile(config.gitwebhook.lua_data, JSON.stringify(Object.assign(event,update)), (error) => {})
 			exec2shell("~/con.sh echo_git_commit")
-			if(rep_name=="node-js-projects")exec2shell("chmod 764 ~/node-js-projects/fever.sh; ~/node-js-projects/fever.sh start")
+			
+			if(rep_name=="node-js-projects")exec2shell("forever stopall; chmod 764 ~/node-js-projects/fever.sh; ~/node-js-projects/fever.sh start")	
+	
 	})
 	.stash("apply")
 	.exec(() => {
