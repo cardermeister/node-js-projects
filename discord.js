@@ -74,11 +74,6 @@ add_cmd("connect",function(line,msg)
 	msg.reply("steam://connect/195.2.252.214:27015")
 },'dev')
 
-add_cmd("test_non_dev",function(line,msg)
-{
-	msg.reply("test accept")
-	
-},'dev')
   
 add_cmd("clear",function(line,msg)
 {
