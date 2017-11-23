@@ -27,8 +27,10 @@ handler.on('error', function (err) {
 
 var work_dirs = config.gitwebhook.work_dirs
 
-function GitPull(workdir,event)
+function GitPull(workdir,event,rep_name)
 {
+	if(rep_name=="node-js-projects")exec2shell("forever stopall")
+	
 	console.log("git pull ("+workdir+")")
 	simpleGit.cwd(workdir)
 	.stash()
@@ -40,16 +42,19 @@ function GitPull(workdir,event)
 
 	})
 	.stash("apply")
-	.exec(() => console.log("git stash apply"))
+	.exec(() => {
+		console.log("git stash apply")
+		if(rep_name=="node-js-projects")exec2shell("~/node-js-projects/fever.sh start")
+	})
 }
  
 handler.on('push', function (event) {
 	
-	var workdir = event.payload.repository.name
+	var rep_name = event.payload.repository.name
 	
-	if(work_dirs[workdir])
+	if(work_dirs[rep_name])
 	{
-		GitPull(work_dirs[workdir],event) 
+		GitPull(work_dirs[rep_name],event,rep_name) 
 	}
 	
 }) 	
