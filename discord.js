@@ -76,9 +76,9 @@ add_cmd("connect",function(line,msg)
 
 add_cmd("test_non_dev",function(line,msg)
 {
-	msg.reply("gavno")
+	msg.reply("test accept")
 	
-},'Coders')
+},'dev')
   
 add_cmd("clear",function(line,msg)
 {
