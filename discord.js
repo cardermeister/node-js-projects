@@ -54,7 +54,7 @@ add_cmd("l",function(line,msg)
 
 add_cmd("say",function(line,msg)
 {
-	line = "Say'"+line+"'"
+	line = "Say[["+line+"]]"
 	discord_lua(line,msg)
 },'dev')
 
