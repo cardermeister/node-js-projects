@@ -93,7 +93,7 @@ add_cmd("help",function(line,msg)
 		color: 254174,
 		title: "List of commands:",
 
-		description: " ",
+		description: "::::::::::::::::::::::::::::::",
 		fields:
 		[
 			{
