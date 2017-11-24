@@ -78,9 +78,63 @@ add_cmd("raw",function(line,msg)
 
 add_cmd("connect",function(line,msg)
 {
-	msg.reply("steam://connect/195.2.252.214:27015 <- Click to connect")
+	msg.channel.send({embed: {
+		color: 254174,
+		title: "",
+		description: "[CONNECT TO WIREBUILD](steam://connect/195.2.252.214:27015)",
+	}})
+	//msg.reply("steam://connect/195.2.252.214:27015 <- Click to connect")
 },'all')
 
+
+add_cmd("help",function(line,msg)
+{
+	msg.channel.send({embed: {
+		color: 254174,
+		title: "List of commands:",
+
+		description: " ",
+		fields:
+		[
+			{
+			name: "!l",
+			value: "RunString()"
+			},
+			{
+				name: "!print",
+				value: "print()"
+			},
+			{
+				name: "!table",
+				value: "PrintTable()"
+			},
+			{
+				name: "!say",
+				value: "Say()"
+			},
+			{
+				name: "!raw",
+				value: "print path and function source"
+			},
+			{
+				name: "!restart",
+				value: "hard restart server (may take over 60 sec)"
+			},
+			{
+				name: "!clear",
+				value: "clear all history of this channel (DANGEROUS)"
+			},
+			{
+				name: "!connect",
+				value: "print link to connect"
+			},
+			{
+				name: "!help",
+				value: "print this message"
+			}
+		],
+	}});
+},'all')
   
 add_cmd("clear",function(line,msg)
 {
