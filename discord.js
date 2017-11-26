@@ -52,6 +52,30 @@ add_cmd("l",function(line,msg)
 	discord_lua(line,msg)
 },'dev')
 
+Object.prototype.getKeyByValue = function( value ) {
+    for( var prop in this ) {
+        if( this.hasOwnProperty( prop ) ) {
+             if( this[ prop ] === value )
+                 return prop;
+        }
+    }
+}
+
+add_cmd("auth",function(line,msg)
+{
+	//PLEASE ADD REGEX TO LINE OMG
+	line = "discord.auth_apply('"+line+"','"+msg.author.id+"')"
+	discord_lua(line,msg)
+	
+	fs.readFile('/home/gre3nfic/wirebuild/garrysmod/data/discord_auth.txt', function(err, data)
+	{
+		obj = JSON.parse(data)
+		msg.reply(obj.getKeyByValue(msg.author.id))
+	})
+
+	
+},'all')
+
 add_cmd("say",function(line,msg)
 {
 	line = "Say[["+line+"]]"
