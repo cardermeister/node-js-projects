@@ -36,48 +36,55 @@ function call_cmd(cmd,line,msg)
 
 var auth_member_ids = {}
 
-function lua_to_js_members(obj,newobj)
+function lua_to_js_members(obj,tokenfix,discordid)
 {
+	var newobj = {}
 	for (key in obj) {
-		newobj[obj[key]] = key;
+		var newkey = obj[key]
+		if(tokenfix && tokenfix && newkey==tokenfix)newkey=discordid
+		newobj[newkey] = key;
 	}
+	return newobj
 }
 
 fs.readFile(config.discord.discord_auth, function(err, data)
 {
 	obj = JSON.parse(data)
-	lua_to_js_members(obj,auth_member_ids)
+	auth_member_ids = lua_to_js_members(obj)
 })
 
-add_cmd("auth",function(line,msg)
+add_cmd("auth",function(token,msg)
 {
-	
+	var author__id = msg.author.id
 	var base64Rejex =new RegExp(/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/);
 	
-	if ( auth_member_ids[msg.author.id] )
+	if ( auth_member_ids[author__id] )
 	{
-		msg.reply("already linked to steamid "+auth_member_ids[msg.author.id])
+		msg.reply("already linked to steamid "+auth_member_ids[author__id])
 		return
 	}
 	
-	if (!base64Rejex.test(line) || line.length<5)
+	if (!base64Rejex.test(token) || token.length<5)
 	{
 		msg.reply("this is not valid token!")
 		return
 	}
-	line = "discord.auth_apply('"+line+"','"+msg.author.id+"')"
+	var line = "discord.auth_apply('"+token+"','"+author__id+"')"
 	discord_lua(line,msg)
 	
 	fs.readFile(config.discord.discord_auth, function(err, data)
 	{
 		obj = JSON.parse(data)
-		lua_to_js_members(obj,auth_member_ids)
 		
-		if ( auth_member_ids[msg.author.id] )
+		auth_member_ids = lua_to_js_members(obj,token,author__id)
+		
+		console.log(auth_member_ids)
+		
+		if ( auth_member_ids[author__id] )
 		{
 			let role = msg.guild.roles.find("name", "★");
 			msg.member.addRole(role)
-			msg.reply("successfully linked own account to steamid "+auth_member_ids[msg.author.id])
+			msg.reply("successfully linked own account to steamid "+auth_member_ids[author__id])
 		}
 	})
 
