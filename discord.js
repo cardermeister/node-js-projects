@@ -70,7 +70,12 @@ add_cmd("auth",function(line,msg)
 	fs.readFile('/home/gre3nfic/wirebuild/garrysmod/data/discord_auth.txt', function(err, data)
 	{
 		obj = JSON.parse(data)
-		msg.reply(obj.getKeyByValue(msg.author.id))
+		//console.log(obj)
+		//console.log(obj.getKeyByValue(msg.author.id))
+		if ( obj.getKeyByValue(msg.author.id) )
+		{
+			msg.reply("successfuly link own account")
+		}
 	})
 
 	
