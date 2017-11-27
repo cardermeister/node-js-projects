@@ -63,17 +63,24 @@ Object.prototype.getKeyByValue = function( value ) {
 
 add_cmd("auth",function(line,msg)
 {
-	//PLEASE ADD REGEX TO LINE OMG
+	//PLEASE ADD REGEX TO LINE OMG // ok its done
+	var base64Rejex =new RegExp(/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/);
+	if (!base64Rejex.test(line) )
+	{
+		msg.reply("this is not valid token!")
+		return
+	}
 	line = "discord.auth_apply('"+line+"','"+msg.author.id+"')"
 	discord_lua(line,msg)
 	
 	fs.readFile('/home/gre3nfic/wirebuild/garrysmod/data/discord_auth.txt', function(err, data)
 	{
 		obj = JSON.parse(data)
-		//console.log(obj)
-		//console.log(obj.getKeyByValue(msg.author.id))
+		
 		if ( obj.getKeyByValue(msg.author.id) )
 		{
+			let role = msg.guild.roles.find("name", "★");
+			msg.member.addRole(role)
 			msg.reply("successfuly link own account")
 		}
 	})
