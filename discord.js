@@ -34,6 +34,71 @@ function call_cmd(cmd,line,msg)
 	}
 }
 
+var auth_member_ids = {}
+
+function lua_to_js_members(obj,newobj)
+{
+	for (key in obj) {
+		newobj[obj[key]] = key;
+	}
+}
+
+fs.readFile(config.discord.discord_auth, function(err, data)
+{
+	obj = JSON.parse(data)
+	lua_to_js_members(obj,auth_member_ids)
+})
+
+add_cmd("auth",function(line,msg)
+{
+	
+	var base64Rejex =new RegExp(/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/);
+	
+	if ( auth_member_ids[msg.author.id] )
+	{
+		msg.reply("already linked to steamid "+auth_member_ids[msg.author.id])
+		return
+	}
+	
+	if (!base64Rejex.test(line) || line.length<5)
+	{
+		msg.reply("this is not valid token!")
+		return
+	}
+	line = "discord.auth_apply('"+line+"','"+msg.author.id+"')"
+	discord_lua(line,msg)
+	
+	fs.readFile(config.discord.discord_auth, function(err, data)
+	{
+		obj = JSON.parse(data)
+		lua_to_js_members(obj,auth_member_ids)
+		
+		if ( auth_member_ids[msg.author.id] )
+		{
+			let role = msg.guild.roles.find("name", "★");
+			msg.member.addRole(role)
+			msg.reply("successfully linked own account to steamid "+auth_member_ids[msg.author.id])
+		}
+	})
+
+	
+},'all')
+
+add_cmd("stars",function(line,msg)
+{
+	var fields = []
+	
+	for (key in auth_member_ids)
+	{
+		fields.push(
+		{
+			name: msg.guild.members.find('id',key).user.username+" <"+key+">",
+			value: "["+auth_member_ids[key]+"](http://steamcommunity.com/profiles/)",
+		})
+	}
+	msg.channel.send({embed: {fields:fields,}})
+},'dev')
+
 add_cmd("restart",function(line,msg)
 {
 	exec("~/sb.sh restart", function(error, stdout, stderr){
@@ -51,42 +116,6 @@ add_cmd("l",function(line,msg)
 {
 	discord_lua(line,msg)
 },'dev')
-
-Object.prototype.getKeyByValue = function( value ) {
-    for( var prop in this ) {
-        if( this.hasOwnProperty( prop ) ) {
-             if( this[ prop ] === value )
-                 return prop;
-        }
-    }
-}
-
-add_cmd("auth",function(line,msg)
-{
-	//PLEASE ADD REGEX TO LINE OMG // ok its done
-	var base64Rejex =new RegExp(/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/);
-	if (!base64Rejex.test(line) )
-	{
-		msg.reply("this is not valid token!")
-		return
-	}
-	line = "discord.auth_apply('"+line+"','"+msg.author.id+"')"
-	discord_lua(line,msg)
-	
-	fs.readFile('/home/gre3nfic/wirebuild/garrysmod/data/discord_auth.txt', function(err, data)
-	{
-		obj = JSON.parse(data)
-		
-		if ( obj.getKeyByValue(msg.author.id) )
-		{
-			let role = msg.guild.roles.find("name", "★");
-			msg.member.addRole(role)
-			msg.reply("successfuly link own account")
-		}
-	})
-
-	
-},'all')
 
 add_cmd("say",function(line,msg)
 {
