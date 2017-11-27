@@ -244,7 +244,8 @@ add_cmd("clear",function(line,msg)
 
 function discord_lua(luacode,msg) {
 	fs.writeFile(config.discord.lua_data, luacode, (error) => {})
-	exec("~/con.sh 'discord-lua-run "+msg.author.username.replace(/;|'|\|/g,"")+"'", function(error, stdout, stderr){
+	//  msg.author.username.replace(/;|'|\|/g,"")
+	exec("~/con.sh 'discord-lua-run "+msg.author.id+"'", function(error, stdout, stderr){
 		if (error)
 		{
 			msg.reply(String(error))
