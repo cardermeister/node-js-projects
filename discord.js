@@ -2,15 +2,27 @@
 const Discord = require("discord.js");
 const client = new Discord.Client();
 
-var sys = require('sys')
+//var sys = require('sys')
 var exec = require('child_process').exec;
 var fs = require('fs');
 
 var config = require('./config')
 
+var ytsearch = require('youtube-search');
+var opts = {
+	maxResults: 3,
+	key: config.youtube.key,
+	type: "video",
+};
+
+const ytdl = require('ytdl-core');
+const streamOptions = { seek: 0, volume: 0.3 };
+
+
+
 client.login(config.discord.token);
 
-//https://discordapp.com/api/oauth2/authorize?client_id=257786656369672192&scope=bot&permissions=0
+//https://discordapp.com/api/oauth2/authorize?client_id=377890604199313408&scope=bot&permissions=0
 
 client.on('ready', () => {
 	console.log(`Logged in as ${client.user.username}!`);
@@ -46,6 +58,111 @@ function lua_to_js_members(obj,tokenfix,discordid)
 	}
 	return newobj
 }
+//////////////////////////////////////////////////////////
+
+var dispatcher = false
+
+var playlist = []
+
+function YTplayStream(connection)
+{
+	if (playlist.length > 0)
+	{
+		console.log(playlist[0].title)
+		dispatcher = connection.playStream(ytdl(playlist[0].link, { filter : 'audioonly' }), streamOptions);
+	}
+}
+
+add_cmd("add",function(line,msg)
+{
+	if (msg.member.voiceChannel)
+	{
+		msg.member.voiceChannel.join()
+		.then(connection => {
+			
+			ytsearch(line, opts, function(err, results) {
+				if(err) return console.log(err);
+				
+				playlist.push({
+					author: msg.author.username,
+					title: results[0].title,
+					link: results[0].link,
+				})
+				
+				msg.channel.send("Добавлено: **"+results[0].title+"** ("+msg.author.username+")")
+				
+				if (playlist.length > 0)
+				{
+				
+					console.log("now "+connection.speaking)
+					
+					if (!dispatcher)YTplayStream(connection)
+					
+					dispatcher.connection2 = connection
+			
+					if (!dispatcher.init_events)
+					{
+						dispatcher.on('speaking',function(isplaying)
+						{
+							console.log("speaking "+isplaying)
+							if (isplaying)
+							{
+								msg.channel.send("Сейчас играет: **"+playlist[0].title+"** ("+playlist[0].username+")")
+							}
+							else
+							{	
+								playlist.shift()
+								setTimeout(function()
+								{
+									YTplayStream(connection)
+								},2000)
+							}
+						
+						})
+
+						dispatcher.init_events = true
+					}
+				
+				}
+				
+			});
+
+			
+		})
+		
+	}
+},'dev')
+
+add_cmd("skip",function(line,msg)
+{
+	if (!dispatcher) return
+	dispatcher.end("skip")
+	
+},'dev')
+
+add_cmd("leave",function(line,msg)
+{
+	dispatcher.connection2.disconnect()
+	dispatcher = false 
+	playlist = []
+	
+},'dev')
+
+add_cmd("list",function(line,msg)
+{
+	console.log(playlist)
+	playlist.forEach(function(item, i) {
+		msg.reply( i + ": " + item.title);
+	});
+},'all')
+
+add_cmd("volume",function(line,msg)
+{
+	if (!dispatcher) return
+	dispatcher.setVolume(Number(line))
+},'all')
+
+//////////////////////////////////////////////////////////
 
 fs.readFile(config.discord.discord_auth, function(err, data)
 {
