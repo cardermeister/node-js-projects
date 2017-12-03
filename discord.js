@@ -373,7 +373,7 @@ function discord_lua(luacode,msg) {
 
 client.on('message', msg => {
 	
-	var reg = (/!(\S*)\s?(.*)/g).exec(msg.content)
+	var reg = (/^!(\S*)\s?(.*)/g).exec(msg.content)
 	if(reg && reg[1])
 	{
 		var cmd = reg[1]
