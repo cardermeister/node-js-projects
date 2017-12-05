@@ -42,7 +42,7 @@ function GitPull(workdir,event,rep_name)
 	.stash("apply")
 	.exec(() => {
 		console.log("git stash apply")
-		if(rep_name=="node-js-projects")exec2shell("forever restartall")
+		//if(rep_name=="node-js-projects")exec2shell("forever restartall")
 	})
 }
  
