@@ -7,6 +7,7 @@ var exec = require('child_process').exec;
 var fs = require('fs');
 
 var config = require('./config')
+var SteamID = require('steamid');
 
 var ytsearch = require('youtube-search');
 var opts = {
@@ -225,11 +226,13 @@ add_cmd("stars",function(line,msg)
 	
 	for (key in auth_member_ids)
 	{
+		
 		if ( regex_token.test(key) )continue
+		var sid = new SteamID(auth_member_ids[key]);
 		fields.push(
 		{
 			name: msg.guild.members.find('id',key).user.username+" <"+key+">",
-			value: "["+auth_member_ids[key]+"](http://steamcommunity.com/profiles/)",
+			value: "["+auth_member_ids[key]+"](http://steamcommunity.com/profiles/"+sid+")",
 		})
 	}
 	msg.channel.send({embed: {fields:fields,}})
