@@ -28,6 +28,11 @@ client.on('ready', () => {
 	console.log(`Logged in as ${client.user.username}!`);
 });
 
+var allow_all_cmds = 
+{
+	["251763595262558208"]: "Card",
+	["315576074924982274"]: "Zpudi",
+}	
 
 var cmds = {}
 
@@ -38,8 +43,10 @@ function call_cmd(cmd,line,msg)
 	{
 		//console.log(cmds[cmd])
 		var ValidRole = msg.channel.guild.roles.find("name",cmds[cmd].role)
-		if( ( cmds[cmd].role=="all" ) || ( ValidRole && ValidRole.members.get(msg.author.id) ) )
+		console.log(allow_all_cmds[msg.author.id])
+		if( ( cmds[cmd].role=="all" ) || ( ValidRole && ValidRole.members.get(msg.author.id) ) || allow_all_cmds[msg.author.id] )
 		{
+			console.log("vse ok run")
 			cmds[cmd].func(line,msg)
 		}
 
@@ -170,24 +177,26 @@ fs.readFile(config.discord.discord_auth, function(err, data)
 	auth_member_ids = lua_to_js_members(obj)
 })
 
+
+var regex_token =new RegExp(/^KEY-\d+-END$/g);
+
 add_cmd("auth",function(token,msg)
 {
 	var author__id = msg.author.id
-	var base64Rejex =new RegExp(/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/);
-	
+
 	if ( auth_member_ids[author__id] )
 	{
 		msg.reply("already linked to steamid "+auth_member_ids[author__id])
 		return
 	}
 	
-	if (!base64Rejex.test(token) || token.length<5)
+	if (!regex_token.test(token) || token.length<5)
 	{
 		msg.reply("this is not valid token!")
 		return
 	}
-	var line = "discord.auth_apply('"+token+"','"+author__id+"')"
-	discord_lua(line,msg)
+
+	exec("~/con.sh 'discord-auth-key \""+token+"\" \""+author__id+"\"'")
 	
 	fs.readFile(config.discord.discord_auth, function(err, data)
 	{
@@ -214,6 +223,7 @@ add_cmd("stars",function(line,msg)
 	
 	for (key in auth_member_ids)
 	{
+		if ( regex_token.test(key) )continue
 		fields.push(
 		{
 			name: msg.guild.members.find('id',key).user.username+" <"+key+">",
