@@ -182,6 +182,8 @@ var regex_token =new RegExp(/^KEY-\d+-END$/g);
 
 add_cmd("auth",function(token,msg)
 {
+	token = token.trim()
+	
 	var author__id = msg.author.id
 
 	if ( auth_member_ids[author__id] )
