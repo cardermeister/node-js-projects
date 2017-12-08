@@ -2,6 +2,8 @@
 /fever
 /sentry
 forever/
+/package-lock.json
+steam_chats/
 
 # Logs
 logs
