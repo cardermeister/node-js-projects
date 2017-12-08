@@ -179,6 +179,8 @@ fs.readFile(config.discord.discord_auth, function(err, data)
 })
 
 
+
+
 var regex_token =new RegExp(/^KEY-\d+-END$/g);
 
 add_cmd("auth",function(token,msg)
@@ -278,6 +280,16 @@ add_cmd("raw",function(line,msg)
 {
 	line = "print(GetFunctionRaw("+line+"))"
 	discord_lua(line,msg)
+},'dev')
+
+add_cmd("fever",function(line,msg)
+{
+	if (line=="logs")
+	{
+		exec("~/node-js-projects/fever "+line, function(error, stdout, stderr){
+			msg.reply(String(stdout).replace(/\W\[\d\dm/g,""))
+		})
+	}
 },'dev')
 
 add_cmd("connect",function(line,msg)

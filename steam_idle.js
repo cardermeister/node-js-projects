@@ -1,9 +1,8 @@
 var Steam = require('steam');
 var SteamTotp = require('steam-totp');
 var config = require('./config')
-
 var fs = require('fs');
-var chats_dir = "./steam_chats"
+var chats_dir = __dirname+"/steam_chats"
 if (!fs.existsSync(chats_dir)){
     fs.mkdirSync(chats_dir);
 }
@@ -37,7 +36,7 @@ steamClient.on('error', function(a)
 		logOnOptions.two_factor_code = SteamTotp.getAuthCode(sharedSecret)
 		steamClient.connect()
 		
-	}, 10*60*1000);
+	}, /*10*60*1000*/120000);
 });
 
 steamFriends.on("friendMsg",function(a,b,c)

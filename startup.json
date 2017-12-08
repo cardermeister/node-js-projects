@@ -1,0 +1,26 @@
+[
+  {
+    // git webhook
+    "uid": "webhook",
+    "append": true,
+    "watch": false,
+    "script": "gitwebhook.js",
+    "sourceDir": "/home/card/node-js-projects"
+  },
+  {
+    // discord
+    "uid": "discord",
+    "append": true,
+    "watch": false,
+    "script": "discord.js",
+    "sourceDir": "/home/card/node-js-projects"
+  },
+  {
+    // steam
+    "uid": "idle",
+    "append": true,
+    "watch": false,
+    "script": "steam_idle.js",
+    "sourceDir": "/home/card/node-js-projects"
+  }
+]
