@@ -29,28 +29,27 @@ client.on('ready', () => {
 	console.log(`Logged in as ${client.user.username}!`);
 });
 
-var allow_all_cmds = 
-{
-	["251763595262558208"]: "Card",
-//	["315576074924982274"]: "Zpudi",
-}	
+//["251763595262558208"]: "Card",
 
 var cmds = {}
+var _role = 
+{
+	Devs: ["dev"],
+	Coders: ["dev","Coders"],
+	Stars: ["dev","Coders","★"],
+}
+//concat for custom ids
 
 function add_cmd(cmd,func,role){cmds[cmd] = {func: func, role: role}}
 function call_cmd(cmd,line,msg)
 {
 	if(cmds[cmd])
 	{
-		//console.log(cmds[cmd])
-		var ValidRole = msg.channel.guild.roles.find("name",cmds[cmd].role)
-		console.log(allow_all_cmds[msg.author.id])
-		if( ( cmds[cmd].role=="all" ) || ( ValidRole && ValidRole.members.get(msg.author.id) ) || allow_all_cmds[msg.author.id] )
+		if( !cmds[cmd].role || msg.member.roles.some(r=>cmds[cmd].role.includes(r.name)) || cmds[cmd].role.includes(msg.author.id) )
 		{
-			console.log("vse ok run")
+			console.log("run",msg.author.id)
 			cmds[cmd].func(line,msg)
 		}
-
 	}
 }
 
@@ -139,14 +138,14 @@ add_cmd("add",function(line,msg)
 		})
 		
 	}
-},'dev')
+},_role.Devs)
 
 add_cmd("skip",function(line,msg)
 {
 	if (!dispatcher) return
 	dispatcher.end("skip")
 	
-},'dev')
+},_role.Devs)
 
 add_cmd("leave",function(line,msg)
 {
@@ -154,7 +153,7 @@ add_cmd("leave",function(line,msg)
 	dispatcher = false 
 	playlist = []
 	
-},'dev')
+},_role.Devs)
 
 add_cmd("list",function(line,msg)
 {
@@ -162,13 +161,13 @@ add_cmd("list",function(line,msg)
 	playlist.forEach(function(item, i) {
 		msg.reply( i + ": " + item.title);
 	});
-},'all')
+})
 
 add_cmd("volume",function(line,msg)
 {
 	if (!dispatcher) return
 	dispatcher.setVolume(Number(line))
-},'all')
+})
 
 //////////////////////////////////////////////////////////
 
@@ -177,8 +176,6 @@ fs.readFile(config.discord.discord_auth, function(err, data)
 	obj = JSON.parse(data)
 	auth_member_ids = lua_to_js_members(obj)
 })
-
-
 
 
 var regex_token =new RegExp(/^KEY-\d+-END$/g);
@@ -220,7 +217,7 @@ add_cmd("auth",function(token,msg)
 	})
 
 	
-},'all')
+})
 
 add_cmd("stars",function(line,msg)
 {
@@ -238,7 +235,7 @@ add_cmd("stars",function(line,msg)
 		})
 	}
 	msg.channel.send({embed: {fields:fields,}})
-},'dev')
+},_role.Stars)
 
 add_cmd("restart",function(line,msg)
 {
@@ -251,56 +248,77 @@ add_cmd("restart",function(line,msg)
 			msg.reply(String(error))
 		}
 	})
-},'dev')
+},_role.Devs)
 
 add_cmd("l",function(line,msg)
 {
 	discord_lua(line,msg)
-},'dev')
+},_role.Devs)
 
 add_cmd("say",function(line,msg)
 {
 	line = "Say[["+line+"]]"
 	discord_lua(line,msg)
-},'dev')
+},_role.Devs)
 
 add_cmd("print",function(line,msg)
 {
 	line = "print("+line+")"
 	discord_lua(line,msg)
-},'dev')
+},_role.Devs)
+
+cmds.p = cmds.print
  
 add_cmd("table",function(line,msg)
 {
 	line = "PrintTable("+line+")"
 	discord_lua(line,msg)
-},'dev')
+},_role.Devs)
 
 add_cmd("raw",function(line,msg)
 {
 	line = "print(GetFunctionRaw("+line+"))"
 	discord_lua(line,msg)
-},'dev')
+},_role.Devs)
 
 add_cmd("fever",function(line,msg)
 {
 	if (line=="logs")
 	{
 		exec("~/node-js-projects/fever "+line, function(error, stdout, stderr){
-			msg.reply(String(stdout).replace(/\W\[\d\dm/g,""))
+			msg.reply(String(stdout).replace(/\W\[\d\dm/g,"").replace(/\/home\/card\/node-js-projects/g,""))
 		})
 	}
-},'dev')
+},["251763595262558208"])
+
+add_cmd("idle",function(line,msg)
+{
+	if (line=="start")
+	{
+		line = "idlestart"
+	}
+	else if(line=="stop")
+	{
+		line = "idlestop"
+	}
+	else
+	{
+		return 
+	}
+	exec("~/node-js-projects/fever "+line, function(error, stdout, stderr){
+			msg.reply(String(stdout).replace(/\W\[\d\dm/g,""))
+	})
+},["251763595262558208"])
 
 add_cmd("connect",function(line,msg)
 {
 	msg.channel.send({embed: {
 		color: 254174,
-		title: "",
-		description: "[CONNECT TO WIREBUILD](steam://connect/195.2.252.214:27015)",
+		title: "wirebuild",
+		description: "steam://connect/195.2.252.214:27015",
 	}})
 	//msg.reply("steam://connect/195.2.252.214:27015 <- Click to connect")
-},'all')
+})
 
 
 add_cmd("help",function(line,msg)
@@ -350,7 +368,7 @@ add_cmd("help",function(line,msg)
 			}
 		],
 	}});
-},'all')
+})
   
 add_cmd("clear",function(line,msg)
 {
@@ -383,7 +401,7 @@ add_cmd("clear",function(line,msg)
 	});
 	};
 	deleteStuff();
-},'dev')
+},_role.Devs)
 
 
 function discord_lua(luacode,msg) {

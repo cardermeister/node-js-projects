@@ -7,17 +7,33 @@ module.exports = {
 	discord:
 	{
 		token: '',
-		lua_data: './garrysmod/data/discord-lua.txt',
+		discord_auth: '/data/discord_auth.txt',
+		lua_data: '/data/discord-lua.txt',
+	},
+	anime_bot:
+	{
+		token: '',
+	},
+	youtube:
+	{
+		key: "",
+	},
+	steam:
+	{
+		username: "",
+		userpasswd: "",
+		secretshared: "",
 	},
 	gitwebhook:
 	{
 		secret: '',
-		lua_data: './garrysmod/data/git.json',
+		lua_data: '/data/git.json',
 		work_dirs: 
 		{
-			["repo_name"]: "path_to",
+			addonname: "/addons/addonname",
 		}
-	},
-
+		
+		
+	}
 };
 ```
