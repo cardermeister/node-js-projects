@@ -60,6 +60,15 @@ steamClient.on('logOnResponse', function(logonResp)
 				game_ip_address: 3271752918,
 				game_port: 27015,
 			},
+			{
+				game_id: '570',
+			},
+			{
+				game_id: '220',
+			},
+			{
+				game_id: '420',
+			},
 		]});
 	}
 });

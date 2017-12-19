@@ -9,19 +9,9 @@ var fs = require('fs');
 var config = require('./config')
 var SteamID = require('steamid');
 
-var ytsearch = require('youtube-search');
-var opts = {
-	maxResults: 3,
-	key: config.youtube.key,
-	type: "video",
-};
-
-const ytdl = require('ytdl-core');
-const streamOptions = { seek: 0, volume: 0.3 };
-
-
 
 client.login(config.discord.token);
+//client.login("MzkwNTE3Mjk2MTkzMzM5Mzky.DRLRMw.CdKKLbdU2tbVGTmRUNV7LmizLf0");
 
 //https://discordapp.com/api/oauth2/authorize?client_id=377890604199313408&scope=bot&permissions=0
 
@@ -65,111 +55,6 @@ function lua_to_js_members(obj,tokenfix,discordid)
 	}
 	return newobj
 }
-//////////////////////////////////////////////////////////
-
-var dispatcher = false
-
-var playlist = []
-
-function YTplayStream(connection)
-{
-	if (playlist.length > 0)
-	{
-		console.log(playlist[0].title)
-		dispatcher = connection.playStream(ytdl(playlist[0].link, { filter : 'audioonly' }), streamOptions);
-	}
-}
-
-add_cmd("add",function(line,msg)
-{
-	if (msg.member.voiceChannel)
-	{
-		msg.member.voiceChannel.join()
-		.then(connection => {
-			
-			ytsearch(line, opts, function(err, results) {
-				if(err) return console.log(err);
-				
-				playlist.push({
-					author: msg.author.username,
-					title: results[0].title,
-					link: results[0].link,
-				})
-				
-				msg.channel.send("Добавлено: **"+results[0].title+"** ("+msg.author.username+")")
-				
-				if (playlist.length > 0)
-				{
-				
-					console.log("now "+connection.speaking)
-					
-					if (!dispatcher)YTplayStream(connection)
-					
-					dispatcher.connection2 = connection
-			
-					if (!dispatcher.init_events)
-					{
-						dispatcher.on('speaking',function(isplaying)
-						{
-							console.log("speaking "+isplaying)
-							if (isplaying)
-							{
-								msg.channel.send("Сейчас играет: **"+playlist[0].title+"** ("+playlist[0].username+")")
-							}
-							else
-							{	
-								playlist.shift()
-								setTimeout(function()
-								{
-									YTplayStream(connection)
-								},2000)
-							}
-						
-						})
-
-						dispatcher.init_events = true
-					}
-				
-				}
-				
-			});
-
-			
-		})
-		
-	}
-},_role.Devs)
-
-add_cmd("skip",function(line,msg)
-{
-	if (!dispatcher) return
-	dispatcher.end("skip")
-	
-},_role.Devs)
-
-add_cmd("leave",function(line,msg)
-{
-	dispatcher.connection2.disconnect()
-	dispatcher = false 
-	playlist = []
-	
-},_role.Devs)
-
-add_cmd("list",function(line,msg)
-{
-	console.log(playlist)
-	playlist.forEach(function(item, i) {
-		msg.reply( i + ": " + item.title);
-	});
-})
-
-add_cmd("volume",function(line,msg)
-{
-	if (!dispatcher) return
-	dispatcher.setVolume(Number(line))
-})
-
-//////////////////////////////////////////////////////////
 
 fs.readFile(config.discord.discord_auth, function(err, data)
 {
@@ -218,7 +103,16 @@ add_cmd("auth",function(token,msg)
 
 	
 })
-
+/*
+add_cmd("test",function(line,msg)
+{
+	msg.delete()
+	.then(msg => 
+	{
+		msg.reply("```lua\n"+line+"\n```")
+	})
+},_role.Devs)
+*/
 add_cmd("stars",function(line,msg)
 {
 	var fields = []
@@ -251,8 +145,11 @@ add_cmd("restart",function(line,msg)
 },_role.Devs)
 
 add_cmd("l",function(line,msg)
-{
-	discord_lua(line,msg)
+{	
+	msg.reply("```lua\n"+line+"\n```").then(function()
+	{
+		discord_lua(line,msg)
+	})
 },_role.Devs)
 
 add_cmd("say",function(line,msg)
