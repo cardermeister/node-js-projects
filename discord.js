@@ -9,6 +9,9 @@ var fs = require('fs');
 var config = require('./config')
 var SteamID = require('steamid');
 
+var wolfram = require('wolfram').createClient(config.wolfram.key);
+
+
 
 client.login(config.discord.token);
 //client.login("MzkwNTE3Mjk2MTkzMzM5Mzky.DRLRMw.CdKKLbdU2tbVGTmRUNV7LmizLf0");
@@ -103,16 +106,65 @@ add_cmd("auth",function(token,msg)
 
 	
 })
-/*
-add_cmd("test",function(line,msg)
+
+
+add_cmd("w",function(line,msg)
 {
-	msg.delete()
-	.then(msg => 
-	{
-		msg.reply("```lua\n"+line+"\n```")
-	})
+	try{
+		msg.channel.send(":warning: This command is quite unstable!").then(function(msg){
+			msg.delete(5000);
+		});   
+		wolfram.query(line, function(err, result) {
+			if(err) msg.channel.send(":x: somethin happened :/")
+			goodresults = result.reduce(function iter(r, a) {
+				if (a === null) {
+					return r;
+				}
+				if (Array.isArray(a)) {
+					return a.reduce(iter, r);
+				}
+				if (typeof a === 'object') {
+					return Object.keys(a).map(k => a[k]).reduce(iter, r);
+				}
+				return r.concat(a);
+			}, []);
+			
+			var url = "https://images-na.ssl-images-amazon.com/images/I/71a5Fej97WL.png"
+			if(goodresults[18]!=undefined && goodresults[18].startsWith("http")) url = goodresults[18]
+			else if(goodresults[32]!=undefined && goodresults[32].startsWith("http")) url = goodresults[32]
+
+			const embed = new Discord.RichEmbed()
+			.setTitle('wolfram')
+			.setDescription("")
+			.setColor(0x00AE86)
+			.setImage(goodresults[1])
+			.addField("Input", goodresults[2], true)
+			.setImage(url)
+			.addField("Result", goodresults[7], true)
+			.setFooter('WolframAPI')
+			.setThumbnail(goodresults[3])
+			.setTimestamp()
+			.setURL('http://cardermeister.github.io/');
+			
+			//console.log(goodresults)
+	
+			if(goodresults[2]==undefined){
+				msg.channel.send(":x: Invalid input.");
+			}else{
+				msg.channel.send({embed});
+			}      
+		});
+	}catch(err){
+		msg.channel(":x: Either something went horribly wrong, or you didnt enter a query.");
+		console.log(err);
+	}
+},_role.Stars)
+
+add_cmd("setgame",function(line,msg)
+{
+	client.user.setGame(line)
 },_role.Devs)
-*/
+
 add_cmd("stars",function(line,msg)
 {
 	var fields = []
@@ -146,10 +198,7 @@ add_cmd("restart",function(line,msg)
 
 add_cmd("l",function(line,msg)
 {	
-	msg.reply("```lua\n"+line+"\n```").then(function()
-	{
-		discord_lua(line,msg)
-	})
+	discord_lua(line,msg)
 },_role.Devs)
 
 add_cmd("say",function(line,msg)
@@ -220,51 +269,20 @@ add_cmd("connect",function(line,msg)
 
 add_cmd("help",function(line,msg)
 {
-	msg.channel.send({embed: {
-		color: 254174,
-		title: "List of commands:",
-
-		description: ":::::::::::::::::::::::::::::::::::::::::::::",
-		fields:
-		[
-			{
-			name: "!l",
-			value: "RunString()"
-			},
-			{
-				name: "!print",
-				value: "print()"
-			},
-			{
-				name: "!table",
-				value: "PrintTable()"
-			},
-			{
-				name: "!say",
-				value: "Say()"
-			},
-			{
-				name: "!raw",
-				value: "print path and function source"
-			},
-			{
-				name: "!restart",
-				value: "hard restart server (may take over 60 sec)"
-			},
-			{
-				name: "!clear",
-				value: "clear all history of this channel (DANGEROUS)"
-			},
-			{
-				name: "!connect",
-				value: "print link to connect"
-			},
-			{
-				name: "!help",
-				value: "print this message"
-			}
-		],
-	}});
+	var cmdadada = ""
+	
+	for (key in cmds){
+		cmdadada+="• "+key+" ("+cmds[key].role+")\n"
+	}
+	
+	console.log(cmdadada)
+	
+	const embed = new Discord.RichEmbed()
+	.setTitle('Помощь')
+	.setDescription("")
+	.setColor(0x00AE86)
+	.addField(":dog: Commands", cmdadada, false)
+	msg.channel.send({embed});
 })
   
 add_cmd("clear",function(line,msg)
