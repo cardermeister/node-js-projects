@@ -165,6 +165,11 @@ add_cmd("setgame",function(line,msg)
 	client.user.setGame(line)
 },_role.Devs)
 
+add_cmd("status",function(line,msg)
+{
+	discord_lua("discord.status()",msg)
+})
+
 add_cmd("stars",function(line,msg)
 {
 	var fields = []
