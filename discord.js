@@ -228,7 +228,7 @@ add_cmd("table",function(line,msg)
 
 add_cmd("raw",function(line,msg)
 {
-	line = "print(GetFunctionRaw("+line+"))"
+	line = "print(GetFunctionSource("+line+"))"
 	discord_lua(line,msg)
 },_role.Devs)
 
