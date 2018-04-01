@@ -1,3 +1,5 @@
+const Telnet = require('telnet-rxjs').Telnet;
+const yeelight_telnet = Telnet.client('212.164.130.21:55443');
 
 const Discord = require("discord.js");
 const client = new Discord.Client();
@@ -226,6 +228,7 @@ add_cmd("table",function(line,msg)
 	discord_lua(line,msg)
 },_role.Devs)
 
+
 add_cmd("src",function(line,msg)
 {
 	line = "print(GetFunctionSource("+line+"))"
@@ -321,6 +324,108 @@ add_cmd("clear",function(line,msg)
 	});
 	};
 	deleteStuff();
+},_role.Devs)
+
+
+add_cmd("ee",function(line,msg)
+{
+	
+	const collector = msg.createReactionCollector((reaction, user) => 
+		true
+	).on("collect", reaction => {
+		const chosen = reaction.emoji.name;
+		console.log(chosen)
+		//collector.stop();
+	});
+	
+},_role.Devs)
+
+function yee_do(cmd)
+{
+	yeelight_telnet.connect();
+	yeelight_telnet.sendln(cmd);
+	yeelight_telnet.disconnect();
+}
+//rgb = (r*65536)+(g*256)+b
+function ye_rgb(r,g,b)
+{
+	return (r*65536)+(g*256)+b
+}
+
+function yee_do_menu(msg)
+{
+	msg.channel.send("YEELIGHT CONTROL PANEL").then(function(menu)
+	{
+		menu.react('🔄').then(
+		menu.react('🌞')).then(
+		menu.react('📕')).then(
+		menu.react('📗')).then(
+		menu.react('📘')).then(
+		menu.react('🍆')).then(
+		menu.react('🌚'))
+		const collector = menu.createReactionCollector((reaction, user) => 
+			user.id === msg.author.id &&
+			(reaction.emoji.name === "🌞" ||
+			reaction.emoji.name === "🌚" ||
+			reaction.emoji.name === "📗" ||
+			reaction.emoji.name === "📕" ||
+			reaction.emoji.name === "📘" ||
+			reaction.emoji.name === "🍆" ||
+			reaction.emoji.name === "🔄")
+		).once("collect", reaction => {
+			const chosen = reaction.emoji.name;
+			if(chosen === "🌞"){
+				yee_do('{"id":1,"method":"set_power","params":["on", "smooth", 500]}')
+				yee_do('{"id":2,"method":"set_bright","params":[100, "smooth", 500]}')
+			}else if(chosen === "🌚"){
+				yee_do('{"id":1,"method":"set_power","params":["on", "smooth", 500]}')
+				yee_do('{"id":2,"method":"set_bright","params":[10, "smooth", 500]}')
+			}else if(chosen === "🔄"){
+				yee_do('{"id":1,"method":"set_power","params":["on", "smooth", 500]}')
+				
+			}else if(chosen === "📕"){
+				yee_do('{"id":1,"method":"set_power","params":["on", "smooth", 500]}')
+				yee_do('{"id":2,"method":"set_rgb","params":['+ye_rgb(255,0,0)+', "smooth", 500]}')
+			}else if(chosen === "📗"){
+				yee_do('{"id":1,"method":"set_power","params":["on", "smooth", 500]}')
+				yee_do('{"id":2,"method":"set_rgb","params":['+ye_rgb(0,255,0)+', "smooth", 500]}')
+			}else if(chosen === "📘"){
+				yee_do('{"id":1,"method":"set_power","params":["on", "smooth", 500]}')
+				yee_do('{"id":2,"method":"set_rgb","params":['+ye_rgb(0,0,255)+', "smooth", 500]}')
+			}else if(chosen === "🍆"){
+				yee_do('{"id":1,"method":"set_power","params":["on", "smooth", 500]}')
+				yee_do('{"id":2,"method":"set_rgb","params":['+ye_rgb(90, 0, 157)+', "smooth", 500]}')
+			}else{
+				
+			}
+			
+			console.log(chosen)
+			yee_do_menu(msg)
+			menu.delete()
+			collector.stop();
+
+		});
+		
+	})
+}
+//🔄
+//📕red
+//📗green
+//📘blue
+//🍆purple
+
+/*
+yeelight_telnet.data.subscribe((data) => {
+	if(ye_chan)
+	{
+		ye_chan.channel.send(data.replace(/(\r\n|\n|\r)/gm," "))
+	}
+});
+*/
+
+add_cmd("menu",function(line,msg)
+{
+		yee_do_menu(msg)
 },_role.Devs)
 
 
