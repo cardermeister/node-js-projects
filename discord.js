@@ -381,8 +381,7 @@ function yee_do_menu(msg)
 				yee_do('{"id":1,"method":"set_power","params":["on", "smooth", 500]}')
 				yee_do('{"id":2,"method":"set_bright","params":[10, "smooth", 500]}')
 			}else if(chosen === "🔄"){
-				yee_do('{"id":1,"method":"set_power","params":["on", "smooth", 500]}')
-				
+				yee_do('{"id":1,"method":"toggle","params":[]}')
 			}else if(chosen === "📕"){
 				yee_do('{"id":1,"method":"set_power","params":["on", "smooth", 500]}')
 				yee_do('{"id":2,"method":"set_rgb","params":['+ye_rgb(255,0,0)+', "smooth", 500]}')
