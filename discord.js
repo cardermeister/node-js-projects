@@ -1,5 +1,4 @@
-const Telnet = require('telnet-rxjs').Telnet;
-const yeelight_telnet = Telnet.client('212.164.130.21:55443');
+const net = require('net');
 
 const Discord = require("discord.js");
 const client = new Discord.Client();
@@ -342,11 +341,12 @@ add_cmd("ee",function(line,msg)
 
 function yee_do(cmd)
 {
-	yeelight_telnet.connect();
-	yeelight_telnet.sendln(cmd);
-	yeelight_telnet.disconnect();
+	const yeelight_client = net.createConnection({host: "card_home", port: 55443}, () => {
+		yeelight_client.write(cmd+'\r\n');
+		yeelight_client.end()
+	});
 }
-//rgb = (r*65536)+(g*256)+b
+
 function ye_rgb(r,g,b)
 {
 	return (r*65536)+(g*256)+b
@@ -357,12 +357,12 @@ function yee_do_menu(msg)
 	msg.channel.send("YEELIGHT CONTROL PANEL").then(function(menu)
 	{
 		menu.react('🔄').then(
-		menu.react('🌞')).then(
-		menu.react('📕')).then(
-		menu.react('📗')).then(
-		menu.react('📘')).then(
-		menu.react('🍆')).then(
-		menu.react('🌚'))
+		menu.react('🌞').then(
+		menu.react('📕').then(
+		menu.react('📗').then(
+		menu.react('📘').then(
+		menu.react('🍆').then(
+		menu.react('🌚') ))))))
 		const collector = menu.createReactionCollector((reaction, user) => 
 			user.id === msg.author.id &&
 			(reaction.emoji.name === "🌞" ||
@@ -414,13 +414,32 @@ function yee_do_menu(msg)
 //🍆purple
 
 /*
-yeelight_telnet.data.subscribe((data) => {
-	if(ye_chan)
-	{
-		ye_chan.channel.send(data.replace(/(\r\n|\n|\r)/gm," "))
-	}
-});
+
+EventEmitter.prototype.madOn = function(eventName, listener, {timeout = void 0, times = void 0}) {
+    this.on(eventName, listener);
+   
+    if(Number.isInteger(timeout) === true) {
+        setTimeout(() => {
+            this.removeListener(eventName, listener);
+        }, timeout);
+    }
+ 
+    let counter = 0;
+ 
+    if(Number.isInteger(times) === true) {
+        const counterFunc = () => {
+            ++counter;
+ 
+            if(counter === times)
+                this.removeListener(eventName, listener);
+        };
+ 
+        this.on(eventName, counterFunc);
+    }
+}
+
 */
+
 
 add_cmd("menu",function(line,msg)
 {
