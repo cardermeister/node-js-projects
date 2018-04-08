@@ -450,7 +450,7 @@ add_cmd("menu",function(line,msg)
 function discord_lua(luacode,msg) {
 	fs.writeFile(config.discord.lua_data, luacode, (error) => {})
 	//  msg.author.username.replace(/;|'|\|/g,"")
-	exec("~/con.sh 'discord-lua-run "+msg.author.id+"'", function(error, stdout, stderr){
+	exec("~/con.sh 'discord-lua-run [\""+msg.author.id+"\",\""+msg.channel.id+"\"]'", function(error, stdout, stderr){
 		if (error)
 		{
 			msg.reply(String(error))
