@@ -458,17 +458,6 @@ function discord_lua(luacode,msg) {
 	})
 }
 
-function discord_lua(luacode,msg) {
-	fs.writeFile(config.discord.lua_data, luacode, (error) => {})
-	//  msg.author.username.replace(/;|'|\|/g,"")
-	exec("~/con.sh 'discord-lua-run [\""+msg.author.id+"\",\""+msg.channel.id+"\"]'", function(error, stdout, stderr){
-		if (error)
-		{
-			msg.reply(String(error))
-		}
-	})
-}
-
 function discord_chat(msg) {
 	fs.writeFile(config.discord.chat_data, "[\""+msg.author.username+"\",\""+msg.content+"\",\""+msg.member.displayHexColor+"\"]", (error) => {})
 	//  msg.author.username.replace(/;|'|\|/g,"")
