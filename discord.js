@@ -470,12 +470,7 @@ function discord_chat(msg) {
 	
 	fs.writeFile(config.discord.chat_data, "[\""+send_name+"\",\""+send_content+"\",\""+msg.member.displayHexColor+"\"]", (error) => {})
 	
-	exec("~/con.sh 'getdstext'", function(error, stdout, stderr){
-		if (error)
-		{
-			msg.reply(String(error))
-		}
-	})
+	exec("~/con.sh 'lua_run discord.get_relay()'")
 }
 
 
