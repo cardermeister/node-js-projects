@@ -472,18 +472,19 @@ function discord_chat(msg) {
 
 client.on('message', msg => {
 	
-	if (msg.channel.id == "432467670915612672")
-	{
-		if (msg.author.id == "378116447605620736") return
-		discord_chat(msg)
-		return 
-	}
+	if (msg.author.id == "378116447605620736") return
+	
 	var reg = (/^!(\S*)\s?([^]*)/gm).exec(msg.content)
 	if(reg && reg[1])
 	{
 		var cmd = reg[1]
 		var line = reg[2]
 		call_cmd(cmd,line,msg)
+	}
+	else if (msg.channel.id == "432467670915612672")
+	{
+		discord_chat(msg)
+		return 
 	}
 	
 });
