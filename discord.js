@@ -458,9 +458,37 @@ function discord_lua(luacode,msg) {
 	})
 }
 
+function discord_lua(luacode,msg) {
+	fs.writeFile(config.discord.lua_data, luacode, (error) => {})
+	//  msg.author.username.replace(/;|'|\|/g,"")
+	exec("~/con.sh 'discord-lua-run [\""+msg.author.id+"\",\""+msg.channel.id+"\"]'", function(error, stdout, stderr){
+		if (error)
+		{
+			msg.reply(String(error))
+		}
+	})
+}
+
+function discord_chat(msg) {
+	fs.writeFile(config.discord.chat_data, "[\""+msg.author.username+"\",\""+msg.content+"\",\""+msg.member.displayHexColor+"\"]", (error) => {})
+	//  msg.author.username.replace(/;|'|\|/g,"")
+	exec("~/con.sh 'getdstext'", function(error, stdout, stderr){
+		if (error)
+		{
+			msg.reply(String(error))
+		}
+	})
+}
+
 
 client.on('message', msg => {
 	
+	if (msg.channel.id == "432467670915612672")
+	{
+		if (msg.author.id == "378116447605620736") return
+		discord_chat(msg)
+		return 
+	}
 	var reg = (/^!(\S*)\s?([^]*)/gm).exec(msg.content)
 	if(reg && reg[1])
 	{
