@@ -459,8 +459,17 @@ function discord_lua(luacode,msg) {
 }
 
 function discord_chat(msg) {
-	fs.writeFile(config.discord.chat_data, "[\""+msg.author.username.split('"').join("'")+"\",\""+msg.content.split('"').join("'")+"\",\""+msg.member.displayHexColor+"\"]", (error) => {})
-	//  msg.author.username.replace(/;|'|\|/g,"")
+	
+	var send_name = msg.author.username.split('"').join("'")
+	var send_content = msg.content.split('"').join("'")
+	if (msg.attachments.first() && msg.attachments.first().url)
+	{
+		if (send_content.length > 0) send_content+=" "
+		send_content+=msg.attachments.first().url
+	}
+	
+	fs.writeFile(config.discord.chat_data, "[\""+send_name+"\",\""+send_content+"\",\""+msg.member.displayHexColor+"\"]", (error) => {})
+	
 	exec("~/con.sh 'getdstext'", function(error, stdout, stderr){
 		if (error)
 		{
@@ -472,7 +481,12 @@ function discord_chat(msg) {
 
 client.on('message', msg => {
 	
-	if (msg.author.id == "378116447605620736") return
+	if (msg.author.id == "378116447605620736")
+	{
+		//msg.delete(3600000)
+		return
+	}
+	if (msg.author.id == "377890604199313408") return
 	
 	var reg = (/^!(\S*)\s?([^]*)/gm).exec(msg.content)
 	if(reg && reg[1])
@@ -483,6 +497,7 @@ client.on('message', msg => {
 	}
 	else if (msg.channel.id == "432467670915612672")
 	{
+
 		discord_chat(msg)
 		return 
 	}
