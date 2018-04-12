@@ -459,7 +459,7 @@ function discord_lua(luacode,msg) {
 }
 
 function discord_chat(msg) {
-	fs.writeFile(config.discord.chat_data, "[\""+msg.author.username+"\",\""+msg.content+"\",\""+msg.member.displayHexColor+"\"]", (error) => {})
+	fs.writeFile(config.discord.chat_data, "[\""+msg.author.username.split('"').join("'")+"\",\""+msg.content.split('"').join("'")+"\",\""+msg.member.displayHexColor+"\"]", (error) => {})
 	//  msg.author.username.replace(/;|'|\|/g,"")
 	exec("~/con.sh 'getdstext'", function(error, stdout, stderr){
 		if (error)
