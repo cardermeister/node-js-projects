@@ -460,15 +460,20 @@ function discord_lua(luacode,msg) {
 
 function discord_chat(msg) {
 	
-	var send_name = msg.author.username.split('"').join("'")
-	var send_content = msg.content.split('"').join("'")
+	var send =
+	{
+		author: msg.author.username,
+		content: msg.content,
+		hexcolor: msg.member.displayHexColor,
+		attachments: false,
+	}
+
 	if (msg.attachments.first() && msg.attachments.first().url)
 	{
-		if (send_content.length > 0) send_content+=" "
-		send_content+=msg.attachments.first().url
+		send.attachments = msg.attachments.first().url
 	}
 	
-	fs.writeFile(config.discord.chat_data, "[\""+send_name+"\",\""+send_content+"\",\""+msg.member.displayHexColor+"\"]", (error) => {})
+	fs.writeFile(config.discord.chat_data,JSON.stringify(send), (error) => {})
 	
 	exec("~/con.sh 'lua_run discord.get_relay()'")
 }
