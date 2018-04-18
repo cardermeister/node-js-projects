@@ -11,7 +11,7 @@ var config = require('./config')
 var SteamID = require('steamid');
 
 var wolfram = require('wolfram').createClient(config.wolfram.key);
-
+var authorized_role = "gmod auth"
 
 
 client.login(config.discord.token);
@@ -30,7 +30,7 @@ var _role =
 {
 	Devs: ["dev"],
 	Coders: ["dev","Coders"],
-	Stars: ["dev","Coders","★"],
+	Authorized: ["dev","Coders",authorized_role],
 }
 //concat for custom ids
 
@@ -78,9 +78,9 @@ add_cmd("auth",function(token,msg)
 	if ( auth_member_ids[author__id] )
 	{
 		msg.reply("already linked to steamid "+auth_member_ids[author__id])
-		if(!msg.member.roles.some(r=>r.name=="★"))
+		if(!msg.member.roles.some(r=>r.name==authorized_role))
 		{
-			let role = msg.guild.roles.find("name", "★");
+			let role = msg.guild.roles.find("name", authorized_role);
 			msg.member.addRole(role)
 		}
 		
@@ -105,7 +105,7 @@ add_cmd("auth",function(token,msg)
 		
 		if ( auth_member_ids[author__id] )
 		{
-			let role = msg.guild.roles.find("name", "★");
+			let role = msg.guild.roles.find("name", authorized_role);
 			msg.member.addRole(role)
 			msg.reply("successfully linked own account to steamid "+auth_member_ids[author__id])
 		}
@@ -165,7 +165,7 @@ add_cmd("w",function(line,msg)
 		msg.channel(":x: Either something went horribly wrong, or you didnt enter a query.");
 		console.log(err);
 	}
-},_role.Stars)
+},_role.Authorized)
 
 add_cmd("setgame",function(line,msg)
 {
@@ -177,7 +177,7 @@ add_cmd("status",function(line,msg)
 	discord_lua("discord.status()",msg)
 })
 
-add_cmd("stars",function(line,msg)
+add_cmd("users",function(line,msg)
 {
 	var fields = []
 	
@@ -193,7 +193,7 @@ add_cmd("stars",function(line,msg)
 		})
 	}
 	msg.channel.send({embed: {fields:fields,}})
-},_role.Stars)
+},_role.Authorized)
 
 add_cmd("restart",function(line,msg)
 {
