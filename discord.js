@@ -78,6 +78,12 @@ add_cmd("auth",function(token,msg)
 	if ( auth_member_ids[author__id] )
 	{
 		msg.reply("already linked to steamid "+auth_member_ids[author__id])
+		if(!msg.member.roles.some(r=>r.name=="★"))
+		{
+			let role = msg.guild.roles.find("name", "★");
+			msg.member.addRole(role)
+		}
+		
 		return
 	}
 	
