@@ -15,7 +15,7 @@ var authorized_role = "gmod auth"
 
 
 client.login(config.discord.token);
-//client.login("MzkwNTE3Mjk2MTkzMzM5Mzky.DRLRMw.CdKKLbdU2tbVGTmRUNV7LmizLf0");
+//client.login("MzkwNTE3Mjk2MTkzMzM5Mzky.DRLRMw.CdKKLbdU2tbVGTmRUNV7LmizLf0"); //pornersin user blyat ne pomny email
 
 //https://discordapp.com/api/oauth2/authorize?client_id=377890604199313408&scope=bot&permissions=0
 
@@ -29,8 +29,9 @@ var cmds = {}
 var _role = 
 {
 	Devs: ["dev"],
-	Coders: ["dev","Coders"],
-	Authorized: ["dev","Coders",authorized_role],
+	Admins: ["dev","admin"],
+	Coders: ["dev","coders","admin"],
+	Authorized: ["dev","admin","coders",authorized_role],
 }
 //concat for custom ids
 
@@ -206,7 +207,7 @@ add_cmd("restart",function(line,msg)
 			msg.reply(String(error))
 		}
 	})
-},_role.Devs)
+},_role.Admins)
 
 add_cmd("l",function(line,msg)
 {	
@@ -285,10 +286,10 @@ add_cmd("help",function(line,msg)
 	var cmdadada = ""
 	
 	for (key in cmds){
-		cmdadada+="• "+key+" ("+cmds[key].role+")\n"
+		cmdadada+="• "+key
+		if (cmds[key].role) cmdadada+=" ("+cmds[key].role+")"
+		cmdadada+="\n"
 	}
-	
-	console.log(cmdadada)
 	
 	const embed = new Discord.RichEmbed()
 	.setTitle('Помощь')
@@ -342,6 +343,13 @@ add_cmd("ee",function(line,msg)
 		console.log(chosen)
 		//collector.stop();
 	});
+	
+	//msg.author.username = "gei"
+	msg.author.createDM().then(function(channel)
+	{
+		channel.send('test')
+	})
+	
 	
 },_role.Devs)
 
@@ -450,7 +458,7 @@ EventEmitter.prototype.madOn = function(eventName, listener, {timeout = void 0, 
 add_cmd("menu",function(line,msg)
 {
 		yee_do_menu(msg)
-},_role.Devs)
+},["251763595262558208"])
 
 
 function discord_lua(luacode,msg) {
