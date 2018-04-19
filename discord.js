@@ -472,6 +472,7 @@ function discord_lua(luacode,msg) {
 	})
 }
 
+
 function discord_chat(msg) {
 	
 	var send =
@@ -480,6 +481,13 @@ function discord_chat(msg) {
 		content: msg.content,
 		hexcolor: msg.member.displayHexColor,
 		attachments: false,
+	}
+	
+
+	var reg = (/<:(.*):(\d+)>/g).exec(msg.content)
+	if(reg && reg[1])
+	{
+		send.content=send.content.replace(/<(:.*:\d+)>/g,"https://cdn.discordapp.com/emojis/"+reg[2]+".png")
 	}
 
 	if (msg.attachments.first() && msg.attachments.first().url)
