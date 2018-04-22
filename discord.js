@@ -175,7 +175,7 @@ add_cmd("setgame",function(line,msg)
 
 add_cmd("status",function(line,msg)
 {
-	discord_lua("discord.status()",msg)
+	discord_lua("discord.status()",msg,false)
 })
 
 add_cmd("users",function(line,msg)
@@ -211,19 +211,27 @@ add_cmd("restart",function(line,msg)
 
 add_cmd("l",function(line,msg)
 {	
-	discord_lua(line,msg)
+	discord_lua(line,msg,false)
+},_role.Devs)
+
+add_cmd("lm",function(line,msg)
+{	
+	msg.author.createDM().then(function(channel)
+	{
+		discord_lua(line,msg,channel.id)
+	})
 },_role.Devs)
 
 add_cmd("say",function(line,msg)
 {
 	line = "Say[["+line+"]]"
-	discord_lua(line,msg)
+	discord_lua(line,msg,false)
 },_role.Devs)
 
 add_cmd("print",function(line,msg)
 {
 	line = "print("+line+")"
-	discord_lua(line,msg)
+	discord_lua(line,msg,false)
 },_role.Devs)
 
 cmds.p = cmds.print
@@ -231,14 +239,14 @@ cmds.p = cmds.print
 add_cmd("table",function(line,msg)
 {
 	line = "PrintTable("+line+")"
-	discord_lua(line,msg)
+	discord_lua(line,msg,false)
 },_role.Devs)
 
 
 add_cmd("src",function(line,msg)
 {
 	line = "print(GetFunctionSource("+line+"))"
-	discord_lua(line,msg)
+	discord_lua(line,msg,false)
 },_role.Devs)
 
 add_cmd("fever",function(line,msg)
@@ -347,7 +355,7 @@ add_cmd("ee",function(line,msg)
 	//msg.author.username = "gei"
 	msg.author.createDM().then(function(channel)
 	{
-		channel.send('test')
+		channel.send(channel.id)
 	})
 	
 	
@@ -461,10 +469,12 @@ add_cmd("menu",function(line,msg)
 },["251763595262558208"])
 
 
-function discord_lua(luacode,msg) {
+function discord_lua(luacode,msg,overwrite) {
+	var ans_chan = msg.channel.id
+	if(overwrite)ans_chan=overwrite
 	fs.writeFile(config.discord.lua_data, luacode, (error) => {})
 	//  msg.author.username.replace(/;|'|\|/g,"")
-	exec("~/con.sh 'discord-lua-run [\""+msg.author.id+"\",\""+msg.channel.id+"\"]'", function(error, stdout, stderr){
+	exec("~/con.sh 'discord-lua-run [\""+msg.author.id+"\",\""+ans_chan+"\"]'", function(error, stdout, stderr){
 		if (error)
 		{
 			msg.reply(String(error))
