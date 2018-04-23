@@ -518,8 +518,17 @@ client.on('message', msg => {
 		//msg.delete(3600000)
 		return
 	}
-	if (msg.author.id == "377890604199313408") return
-	
+	if (msg.author.id == "377890604199313408")
+	{
+		var reg = (/<SYS-`(.+)`-SYS>/gm).exec(msg.content)
+		if(reg && reg[1])
+		{
+			var tab = JSON.parse(reg[1])
+			if(tab.action=="setgame" && tab.count)client.user.setGame("Online: "+tab.count)
+			msg.delete()
+		}
+		return
+	}
 	var reg = (/^!(\S*)\s?([^]*)/gm).exec(msg.content)
 	if(reg && reg[1])
 	{
