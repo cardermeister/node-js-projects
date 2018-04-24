@@ -513,22 +513,9 @@ function discord_chat(msg) {
 
 client.on('message', msg => {
 	
-	if (msg.author.id == "378116447605620736")
-	{
-		//msg.delete(3600000)
-		return
-	}
-	if (msg.author.id == "377890604199313408")
-	{
-		var reg = (/<SYS-`(.+)`-SYS>/gm).exec(msg.content)
-		if(reg && reg[1])
-		{
-			var tab = JSON.parse(reg[1])
-			if(tab.action=="setgame" && tab.count)client.user.setGame("Online: "+tab.count)
-			msg.delete()
-		}
-		return
-	}
+	if (msg.author.id == "378116447605620736")return //webhook
+	if (msg.author.id == "377890604199313408")return //pornersin
+	
 	var reg = (/^!(\S*)\s?([^]*)/gm).exec(msg.content)
 	if(reg && reg[1])
 	{
@@ -543,4 +530,26 @@ client.on('message', msg => {
 		return 
 	}
 	
+});
+
+var actions = 
+{
+	setgame: function(tab)
+	{
+		if(tab.count)client.user.setGame("Online: "+tab.count)
+	}
+}
+
+fs.watch(config.discord.filewatch, (eventType, filename) => {
+	if(eventType == "change")
+	{
+		fs.readFile(config.discord.filewatch, (err, data) => {
+			try {
+				var tab = JSON.parse(data);
+				if (actions[tab.action]) actions[tab.action](tab) 
+			} catch (e) {
+				console.log(e);
+			}	
+		});	
+	}
 });
