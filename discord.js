@@ -187,9 +187,13 @@ add_cmd("users",function(line,msg)
 		
 		if ( regex_token.test(key) )continue
 		var sid = new SteamID(auth_member_ids[key]);
+		var uname = ""
+		
+		try{uname = msg.guild.members.find('id',key).user.username}catch(e){uname = e}
+		
 		fields.push(
 		{
-			name: msg.guild.members.find('id',key).user.username+" <"+key+">",
+			name: uname+" <"+key+">",
 			value: "["+auth_member_ids[key]+"](http://steamcommunity.com/profiles/"+sid+")",
 		})
 	}
