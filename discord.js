@@ -475,7 +475,11 @@ add_cmd("menu",function(line,msg)
 
 function discord_lua(luacode,msg,overwrite) {
 	var ans_chan = msg.channel.id
-	if(overwrite)ans_chan=overwrite
+	if(overwrite)ans_chan=overwrite;
+
+	var logline = "["+Date()+"] "+msg.author.id+" -> "+luacode;
+	fs.appendFileSync('lua_run.log', logline+"\n");
+
 	fs.writeFile(config.discord.lua_data, luacode, (error) => {})
 	//  msg.author.username.replace(/;|'|\|/g,"")
 	exec("~/con.sh 'discord-lua-run [\""+msg.author.id+"\",\""+ans_chan+"\"]'", function(error, stdout, stderr){

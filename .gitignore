@@ -4,6 +4,7 @@
 forever/
 /package-lock.json
 steam_chats/
+/lua_run.log
 
 # Logs
 logs
