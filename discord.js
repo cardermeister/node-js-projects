@@ -375,15 +375,15 @@ add_cmd("l0k",function(line,msg)
       		sendtext+=lines[linef]+"\n"
     	}
     	sendtext+="```"
-	});
 
-	msg.author.createDM().then(function(channel)
-	{
-		channel.send(sendtext)
-	})
+    	msg.author.createDM().then(function(channel)
+		{
+			channel.send(sendtext)
+		})
+	});
 	
 	
-},["251763595262558208"])
+},["251763595262558208","324890460185165834"])
 
 function yee_do(cmd)
 {
