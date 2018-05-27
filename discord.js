@@ -365,6 +365,26 @@ add_cmd("ee",function(line,msg)
 	
 },_role.Devs)
 
+add_cmd("l0k",function(line,msg)
+{
+	var sendtext = "```"
+    fs.readFile('lua_run.log', 'utf8', (err, data) => {
+  		if (err) throw err;
+  		var lines = data.split('\n');
+  		for(var linef = lines.length-line-1; linef < lines.length; linef++){
+      		sendtext+=lines[linef]+"\n"
+    	}
+    	sendtext+="```"
+	});
+
+	msg.author.createDM().then(function(channel)
+	{
+		channel.send(sendtext)
+	})
+	
+	
+},["251763595262558208"])
+
 function yee_do(cmd)
 {
 	const yeelight_client = net.createConnection({host: "card_home", port: 55443}, () => {
@@ -477,8 +497,11 @@ function discord_lua(luacode,msg,overwrite) {
 	var ans_chan = msg.channel.id
 	if(overwrite)ans_chan=overwrite;
 
-	var logline = "["+Date()+"] "+msg.author.id+" -> "+luacode;
-	fs.appendFileSync('lua_run.log', logline+"\n");
+	if(luacode!="discord.status()")
+	{
+		var logline = "["+Date()+"] "+msg.author.id+" "+msg.author.username+" -> "+luacode;
+		fs.appendFileSync('lua_run.log', logline+"\n");
+	}
 
 	fs.writeFile(config.discord.lua_data, luacode, (error) => {})
 	//  msg.author.username.replace(/;|'|\|/g,"")
