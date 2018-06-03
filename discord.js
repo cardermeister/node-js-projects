@@ -189,7 +189,7 @@ add_cmd("users",function(line,msg)
 		var sid = new SteamID(auth_member_ids[key]);
 		var uname = ""
 		
-		try{uname = msg.guild.members.find('id',key).user.username}catch(e){uname = e}
+		try{uname = msg.guild.members.find('id',key).user.username}catch(e){uname = e; continue}
 		
 		fields.push(
 		{

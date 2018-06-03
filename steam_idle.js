@@ -61,13 +61,13 @@ steamClient.on('logOnResponse', function(logonResp)
 				game_port: 27015,
 			},
 			{
-				game_id: '570',
+				game_id: '204360',
 			},
 			{
-				game_id: '220',
+				game_id: '331470',
 			},
 			{
-				game_id: '420',
+				game_id: '241930',
 			},
 		]});
 	}
