@@ -10,7 +10,6 @@ var fs = require('fs');
 var config = require('./config')
 var SteamID = require('steamid');
 
-var wolfram = require('wolfram').createClient(config.wolfram.key);
 var authorized_role = "gmod auth"
 
 
@@ -114,59 +113,6 @@ add_cmd("auth",function(token,msg)
 
 	
 })
-
-
-add_cmd("w",function(line,msg)
-{
-	try{
-		msg.channel.send(":warning: This command is quite unstable!").then(function(msg){
-			msg.delete(5000);
-		});   
-		wolfram.query(line, function(err, result) {
-			if(err) msg.channel.send(":x: somethin happened :/")
-			goodresults = result.reduce(function iter(r, a) {
-				if (a === null) {
-					return r;
-				}
-				if (Array.isArray(a)) {
-					return a.reduce(iter, r);
-				}
-				if (typeof a === 'object') {
-					return Object.keys(a).map(k => a[k]).reduce(iter, r);
-				}
-				return r.concat(a);
-			}, []);
-			
-			var url = "https://images-na.ssl-images-amazon.com/images/I/71a5Fej97WL.png"
-			if(goodresults[18]!=undefined && goodresults[18].startsWith("http")) url = goodresults[18]
-			else if(goodresults[32]!=undefined && goodresults[32].startsWith("http")) url = goodresults[32]
-
-			const embed = new Discord.RichEmbed()
-			.setTitle('wolfram')
-			.setDescription("")
-			.setColor(0x00AE86)
-			.setImage(goodresults[1])
-			.addField("Input", goodresults[2], true)
-			.setImage(url)
-			.addField("Result", goodresults[7], true)
-			.setFooter('WolframAPI')
-			.setThumbnail(goodresults[3])
-			.setTimestamp()
-			.setURL('http://cardermeister.github.io/');
-			
-			//console.log(goodresults)
-	
-			if(goodresults[2]==undefined){
-				msg.channel.send(":x: Invalid input.");
-			}else{
-				msg.channel.send({embed});
-			}      
-		});
-	}catch(err){
-		msg.channel(":x: Either something went horribly wrong, or you didnt enter a query.");
-		console.log(err);
-	}
-},_role.Authorized)
 
 add_cmd("setgame",function(line,msg)
 {
@@ -385,9 +331,27 @@ add_cmd("l0k",function(line,msg)
 	
 },["251763595262558208","324890460185165834"])
 
+var lamp_ip = "1.1.1.1"
+
+fs.readFile("card.ip","utf8", function(err, data)
+{
+	if (!err)
+	{
+		lamp_ip = data;
+	}
+})
+
+add_cmd("setip",function(line,msg)
+{
+	lamp_ip = line
+	fs.writeFile('card.ip', lamp_ip);
+	msg.reply("Success!")
+	msg.delete()
+},["251763595262558208"])
+
 function yee_do(cmd)
 {
-	const yeelight_client = net.createConnection({host: "card_home", port: 55443}, () => {
+	const yeelight_client = net.createConnection({host: lamp_ip, port: 55443}, () => {
 		yeelight_client.write(cmd+'\r\n');
 		yeelight_client.end()
 	});
