@@ -6,13 +6,35 @@ var handler = createHandler({ path: '/webhook' , secret: config.gitwebhook.secre
 const simpleGit = require('simple-git')()
 
 var exec2shell = require('child_process').exec;
+var SteamTotp = require('steam-totp');
+
 
 var fs = require('fs');
+var sharedSecret = config.steam_secret;
+var lgbt = [
+	"#d40606",
+	"#ee9c00",
+	"#e3ff00",
+	"#06bf00",
+	"#001a98",
+]
 
 http.createServer(function (req, res) {
 
-	var vpath = req.url.split('?').shift()
-	
+	var vpath = req.url
+	console.log(vpath)
+	if (sharedSecret[vpath])
+	{
+		var authCode = SteamTotp.getAuthCode(sharedSecret[vpath]);
+		console.log(authCode)
+		var sout = "<font size='72' face='comic sans ms'>"
+		for (i = 0; i < authCode.length; i++) {
+			sout+='<font color="'+lgbt[i]+'">'+authCode[i]+'</font>'
+		}
+		sout+="</font>"
+		res.end(sout)
+	}
+
 	handler(req, res, function (err)
 	{
 		res.statusCode = 404
