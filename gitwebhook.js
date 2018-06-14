@@ -16,7 +16,7 @@ var lgbt = [
 	"#ee9c00",
 	"#e3ff00",
 	"#06bf00",
-	"#001a98",
+	"#4444ff",
 ]
 
 http.createServer(function (req, res) {
@@ -29,7 +29,7 @@ http.createServer(function (req, res) {
 		console.log(authCode)
 		var sout = "<font size='72' face='comic sans ms'>"
 		for (i = 0; i < authCode.length; i++) {
-			sout+='<font color="'+lgbt[i]+'">'+authCode[i]+'</font>'
+			sout+='<font style="background-color:'+lgbt[i]+'">'+authCode[i]+'</font>'
 		}
 		sout+="</font>"
 		res.end(sout)
