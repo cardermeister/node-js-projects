@@ -1,10 +1,10 @@
 [
   {
-    // git webhook
-    "uid": "webhook",
+    // git webhook/express
+    "uid": "express",
     "append": true,
     "watch": false,
-    "script": "gitwebhook.js",
+    "script": "express.js",
     "sourceDir": "/home/card/node-js-projects"
   },
   {
