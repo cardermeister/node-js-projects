@@ -201,13 +201,27 @@ add_cmd("src",function(line,msg)
 
 add_cmd("fever",function(line,msg)
 {
+	var args = line.split(' ',3)
 	if (line=="logs")
 	{
-		exec("~/node-js-projects/fever "+line, function(error, stdout, stderr){
+		exec("~/node-js-projects/fever logs", function(error, stdout, stderr){
 			msg.reply(String(stdout).replace(/\W\[\d\dm/g,"").replace(/\/home\/card\/node-js-projects/g,""))
 		})
 	}
+	console.log(args)
+	console.log(args[0]=="logs")
+	console.log(args[1])
+	if (args[0]=="logs" && args[1])
+	{
+		console.log('get logs int')
+		exec("~/node-js-projects/fever logs "+parseInt(args[1],10)+" | tail -n "+parseInt(args[2],10), function(error, stdout, stderr){
+			msg.reply(String(stdout).replace(/\W\[\d\dm/gm,"").replace(/\/home\/card\/node-js-projects/gm,""))
+		})
+		/// fever logs 2 | tail -n 30
+	}
 },["251763595262558208"])
+
+
 
 add_cmd("idle",function(line,msg)
 {
@@ -225,6 +239,16 @@ add_cmd("idle",function(line,msg)
 	}
 	exec("~/node-js-projects/fever "+line, function(error, stdout, stderr){
 			msg.reply(String(stdout).replace(/\W\[\d\dm/g,""))
+	})
+},["251763595262558208"])
+
+
+add_cmd("settoken",function(line,msg)
+{
+	fs.writeFile('./sale/salien-script-js/token.txt', line);
+	msg.delete()
+	exec("~/node-js-projects/fever restart run.js", function(error, stdout, stderr){
+		msg.reply("Success!")
 	})
 },["251763595262558208"])
 

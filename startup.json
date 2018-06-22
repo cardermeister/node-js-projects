@@ -15,12 +15,20 @@
     "script": "discord.js",
     "sourceDir": "/home/card/node-js-projects"
   },
-  {
+  /*{
     // steam
     "uid": "idle",
     "append": true,
     "watch": false,
     "script": "steam_idle.js",
     "sourceDir": "/home/card/node-js-projects"
+  },*/
+  {
+    // sale
+    "uid": "sale",
+    "append": true,
+    "watch": false,
+    "script": "run.js",
+    "sourceDir": "/home/card/node-js-projects/sale/salien-script-js"
   }
 ]

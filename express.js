@@ -19,6 +19,8 @@ app.get('/', function (req, res) {
 	res.send('Hey buddy!');
 });
 
+app.use("/express",express.static('express'));
+
 for (user in config.steam_secret)
 {
 	app.get(user,function(req,res)
