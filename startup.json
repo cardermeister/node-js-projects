@@ -30,5 +30,29 @@
     "watch": false,
     "script": "headless.js",
     "sourceDir": "/home/card/node-js-projects/sale/salien-bot"
+  },
+  {
+    // headless
+    "uid": "headless-shiro",
+    "append": true,
+    "watch": false,
+    "script": "headless.js",
+    "sourceDir": "/home/card/node-js-projects/sale/bot-shiro"
+  },
+  {
+    // headless
+    "uid": "headless-headshot",
+    "append": true,
+    "watch": false,
+    "script": "headless.js",
+    "sourceDir": "/home/card/node-js-projects/sale/bot-headshot"
+  },
+  {
+    // headless
+    "uid": "headless-entity",
+    "append": true,
+    "watch": false,
+    "script": "headless.js",
+    "sourceDir": "/home/card/node-js-projects/sale/bot-entity"
   }
 ]
