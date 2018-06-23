@@ -219,7 +219,7 @@ add_cmd("fever",function(line,msg)
 	else
 	{
 		exec("~/node-js-projects/fever "+line, function(error, stdout, stderr){
-			msg.reply(String(stdout))
+			msg.reply(String(stdout).replace(/\W\[\d\dm/gm,"").replace(/\/home\/card\/node-js-projects/gm,""))
 		})
 	}
 },["251763595262558208"])

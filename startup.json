@@ -28,7 +28,7 @@
     "uid": "headless",
     "append": true,
     "watch": false,
-    "script": "run.js",
+    "script": "headless.js",
     "sourceDir": "/home/card/node-js-projects/sale/salien-bot"
   }
 ]
