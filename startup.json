@@ -54,5 +54,13 @@
     "watch": false,
     "script": "headless.js",
     "sourceDir": "/home/card/node-js-projects/sale/bot-entity"
+  },
+  {
+    // headless
+    "uid": "headless-max",
+    "append": true,
+    "watch": false,
+    "script": "headless.js",
+    "sourceDir": "/home/card/node-js-projects/sale/bot-max"
   }
 ]
