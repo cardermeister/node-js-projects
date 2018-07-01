@@ -1,8 +1,11 @@
 #!/bin/bash
-CONST_PWD=$(pwd)
-for f in sale/*; do
-    cd $CONST_PWD/${f}
-    #git pull
+CONST_PWD="/home/card/node-js-projects"
+cd $CONST_PWD/sale
+for f in *; do
+    cd ${f}
+    pwd
+    git pull
+    cd ..
 done
 
 cd $CONST_PWD/forever
