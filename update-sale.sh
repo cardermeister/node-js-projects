@@ -6,8 +6,3 @@ for f in *; do
     git pull
     cd ..
 done
-
-cd $CONST_PWD/forever
-for f in headless*.log; do
-    echo "" > $f
-done

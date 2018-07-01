@@ -41,7 +41,7 @@ function call_cmd(cmd,line,msg)
 	{
 		if( !cmds[cmd].role || msg.member.roles.some(r=>cmds[cmd].role.includes(r.name)) || cmds[cmd].role.includes(msg.author.id) )
 		{
-			console.log("run",msg.author.id)
+			console.log("run",cmd,msg.author.id)
 			cmds[cmd].func(line,msg)
 		}
 	}
@@ -210,7 +210,6 @@ add_cmd("fever",function(line,msg)
 	}
 	else if (args[0]=="logs" && args[1])
 	{
-		console.log('get logs int')
 		exec("~/node-js-projects/fever logs "+parseInt(args[1],10)+" | tail -n "+parseInt(args[2],10), function(error, stdout, stderr){
 			msg.reply(String(stdout).replace(/\W\[\d\dm/gm,"").replace(/\/home\/card\/node-js-projects/gm,""))
 		})
