@@ -19,7 +19,8 @@ app.get('/', function (req, res) {
 	res.send('Hey buddy!');
 });
 
-app.use("/express",express.static('express'));
+console.log(__dirname )
+app.use("/public",express.static(__dirname + '/express/public'));
 
 for (user in config.steam_secret)
 {
