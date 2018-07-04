@@ -14,7 +14,7 @@
     "watch": false,
     "script": "discord.js",
     "sourceDir": "/home/card/node-js-projects"
-  },
+  }
   /*{
     // steam
     "uid": "idle",
@@ -23,52 +23,4 @@
     "script": "steam_idle.js",
     "sourceDir": "/home/card/node-js-projects"
   },*/
-  {
-    // headless
-    "uid": "headless",
-    "append": true,
-    "watch": false,
-    "script": "headless.js",
-    "sourceDir": "/home/card/node-js-projects/sale/salien-bot"
-  },
-  {
-    // headless
-    "uid": "headless-shiro",
-    "append": true,
-    "watch": false,
-    "script": "headless.js",
-    "sourceDir": "/home/card/node-js-projects/sale/bot-shiro"
-  },
-  {
-    // headless
-    "uid": "headless-headshot",
-    "append": true,
-    "watch": false,
-    "script": "headless.js",
-    "sourceDir": "/home/card/node-js-projects/sale/bot-headshot"
-  },
-  {
-    // headless
-    "uid": "headless-entity",
-    "append": true,
-    "watch": false,
-    "script": "headless.js",
-    "sourceDir": "/home/card/node-js-projects/sale/bot-entity"
-  },
-  {
-    // headless
-    "uid": "headless-max",
-    "append": true,
-    "watch": false,
-    "script": "headless.js",
-    "sourceDir": "/home/card/node-js-projects/sale/bot-max"
-  },
-  {
-    // headless
-    "uid": "headless-bonk",
-    "append": true,
-    "watch": false,
-    "script": "headless.js",
-    "sourceDir": "/home/card/node-js-projects/sale/bot-bonk"
-  }
 ]
