@@ -16,8 +16,21 @@ var work_dirs 		= config.gitwebhook.work_dirs
 
 
 app.get('/', function (req, res) {
-	res.send('Hey buddy!');
+	res.send("heu");
 });
+
+app.get('/online', function (req, res, next) {
+
+fs.readFile('/home/card/wirebuild/garrysmod/data/iin/logs/online.txt', (err, jdata) => {	
+	fs.readFile(__dirname + '/express/' +"online.html", (err, data) => {
+		res.send("<script>var json_data='"+jdata+"'</script>"+data);
+		res.end()
+	});
+});
+
+});
+
+
 
 console.log(__dirname )
 app.use("/public",express.static(__dirname + '/express/public'));

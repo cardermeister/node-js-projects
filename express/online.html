@@ -1,0 +1,82 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.min.js"></script>
+<div class="chart-container" style="height:60%; width: 100% !important">
+    <canvas id="myChart"></canvas>
+</div>
+
+<script>
+
+var ctx = document.getElementById("myChart");
+
+var gei_table = JSON.parse(json_data)
+
+var data = {
+        labels: [],
+        datasets: [{
+            label: 'online',
+            data: []
+        }]
+    }
+
+var g_players = {}
+
+for (var Elem in gei_table) {
+    
+    var time = gei_table[Elem].time
+    var players = gei_table[Elem].players
+
+    var date = new Date();
+    date.setTime(time*1000)
+    var temp_data = date.getHours()+":"+date.getMinutes()
+    g_players[temp_data] = players
+
+    data.labels.push(temp_data)
+    data.datasets[0].data.push(players.length)
+}
+/*
+for (var time in gei_table) {
+    data.labels.push(time)
+    var plys = gei_table[time]
+    data.datasets[0].data.push(plys.length)
+}
+*/
+var myLineChart = new Chart(ctx, {
+    type: 'line',
+    data: data,
+    options: {
+        events: ["mousemove", "touchstart", "touchmove", "click"],
+        responsive:true,
+        maintainAspectRatio: false,
+        tooltips: {
+            callbacks: {
+                footer: function(tooltipItem){
+                    var val = []
+                    //[tooltipItem[0].xLabel]
+                    for (var i in g_players[tooltipItem[0].xLabel]) {
+                        var row = (g_players[tooltipItem[0].xLabel][i])
+                        val.push("● "+row.name)
+                    }
+                    return val
+                },
+                label: function(tooltipItem, data) {
+                    var label = data.datasets[tooltipItem.datasetIndex].label || '';
+                    
+                    if (label) {
+                        label += ': ';
+                    }
+                    label += Math.round(tooltipItem.yLabel * 100) / 100;
+                    return label;
+                }
+            }
+        },
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero:true,
+                    stepSize: 1
+                }
+            }]
+        }
+    } 
+});
+
+</script>
