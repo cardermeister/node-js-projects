@@ -1,21 +1,48 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.min.js"></script>
-<div class="chart-container" style="height:60%; width: 100% !important">
+<script src="http://195.2.252.214:1337/public/chartjs-plugin-zoom.min.js"></script>
+<script src="http://195.2.252.214:1337/public/chartjs-plugin-draggable.min.js"></script>
+
+<div class="chart-container" style="height:60%; width: 95% !important">
+    <button onclick="resetZoom()">Reset Zoom | R</button>
     <canvas id="myChart"></canvas>
 </div>
 
 <script>
+function addZero(i) {
+    if (i < 10) {
+        i = "0" + i;
+    }
+    return i;
+}
+
+function resetZoom() {
+	myLineChart.resetZoom()
+}
+
+document.onkeyup = function(e) {
+    if (e.which == 82) {
+        resetZoom()
+    }
+};
 
 var ctx = document.getElementById("myChart");
-
 var gei_table = JSON.parse(json_data)
 
-var data = {
-        labels: [],
-        datasets: [{
-            label: 'online',
-            data: []
-        }]
-    }
+var data =
+{
+    labels: [],
+    datasets: [{
+        label: 'online',
+        borderColor: 'rgba( 68,112,146,1)',
+        backgroundColor: 'rgba( 68,112,146,0.5)',
+        pointBackgroundColor: 'rgba( 138,0,255,1)',
+        pointBorderColor: 'rgba( 138,0,255,1)',
+        pointStyle: "rect",
+        borderWidth: 2,
+        lineTension: 0.0,
+        data: []
+    }]
+}
 
 var g_players = {}
 
@@ -26,21 +53,17 @@ for (var Elem in gei_table) {
 
     var date = new Date();
     date.setTime(time*1000)
-    var temp_data = date.getHours()+":"+date.getMinutes()
-    g_players[temp_data] = players
+    var temp_data = date//addZero(date.getHours())+":"+addZero(date.getMinutes())
+    g_players[Elem] = players
 
     data.labels.push(temp_data)
     data.datasets[0].data.push(players.length)
 }
-/*
-for (var time in gei_table) {
-    data.labels.push(time)
-    var plys = gei_table[time]
-    data.datasets[0].data.push(plys.length)
-}
-*/
+
 var myLineChart = new Chart(ctx, {
+    
     type: 'line',
+    draggable: true,
     data: data,
     options: {
         events: ["mousemove", "touchstart", "touchmove", "click"],
@@ -49,10 +72,10 @@ var myLineChart = new Chart(ctx, {
         tooltips: {
             callbacks: {
                 footer: function(tooltipItem){
+                
                     var val = []
-                    //[tooltipItem[0].xLabel]
-                    for (var i in g_players[tooltipItem[0].xLabel]) {
-                        var row = (g_players[tooltipItem[0].xLabel][i])
+                    for (var i in g_players[tooltipItem[0].index]) {
+                        var row = (g_players[tooltipItem[0].index][i])
                         val.push("● "+row.name)
                     }
                     return val
@@ -72,11 +95,42 @@ var myLineChart = new Chart(ctx, {
             yAxes: [{
                 ticks: {
                     beginAtZero:true,
-                    stepSize: 1
+                    stepSize: 1,
+                },
+                scaleLabel: {
+					display: true,
+					labelString: '#Players'
+				}
+            }],
+            xAxes: [{
+                type: 'time',
+                time: {
+                    format: "HH:MM",
+					tooltipFormat: 'll HH:mm',
+                    distribution:'linear',
+                    unit: 'minute',
+                    displayFormats: {
+                        minute: 'H:mm',
+                    },
+                    scaleLabel: {
+							display: true,
+							labelString: 'Date'
+					},
+					ticks: {
+						maxRotation: 0
+					}
                 }
             }]
-        }
+        },
+        zoom: {
+			enabled: true,
+			//drag: true,
+			mode: 'x',
+			limits: {
+				max: 10,
+				min: 0.5
+			}
+		}
     } 
 });
-
 </script>
