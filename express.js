@@ -20,14 +20,23 @@ app.get('/', function (req, res) {
 });
 
 app.get('/online', function (req, res, next) {
+	/*
+	fs.readFile('/home/card/wirebuild/garrysmod/data/iin/logs/online.txt', (err, jdata) => {	
+		fs.readFile(__dirname + '/express/' +"online.html", (err, data) => {
+			res.send("<script>var json_data='"+jdata+"'</script>"+data);
+			res.end()
+		});
+	});*/
+	res.sendFile('express/online.html' , { root : __dirname});
 
-fs.readFile('/home/card/wirebuild/garrysmod/data/iin/logs/online.txt', (err, jdata) => {	
-	fs.readFile(__dirname + '/express/' +"online.html", (err, data) => {
-		res.send("<script>var json_data='"+jdata+"'</script>"+data);
-		res.end()
-	});
 });
 
+app.get('/online/json_data.json', function (req, res, next) {
+
+	fs.readFile('/home/card/wirebuild/garrysmod/data/iin/logs/online.txt', (err, jdata) => {	
+			res.end(jdata)
+	});
+	
 });
 
 
