@@ -1,6 +1,5 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.min.js"></script>
-<script src="http://195.2.252.214:1337/public/chartjs-plugin-zoom.min.js"></script>
-<script src="http://195.2.252.214:1337/public/chartjs-plugin-draggable.min.js"></script>
+<script src="/public/chartjs-plugin-zoom.min.js"></script>
 
 <div class="chart-container" style="height:60%; width: 95% !important">
     <button onclick="resetZoom()">Reset Zoom | R</button>
@@ -15,7 +14,7 @@ function addZero(i) {
     return i;
 }
 
-fetch("http://195.2.252.214:1337/online/json_data.json").then(function(resp)
+fetch("/online/json_data.json").then(function(resp)
 {
     return resp.json()
 }).then(function(json_data){
@@ -34,6 +33,7 @@ fetch("http://195.2.252.214:1337/online/json_data.json").then(function(resp)
             pointBorderColor: 'rgba( 138,0,255,1)',
             pointStyle: "rect",
             borderWidth: 2,
+            radius: 1,
             lineTension: 0.0,
             data: []
         }]
