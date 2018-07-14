@@ -34,7 +34,7 @@ fetch("/online/json_data.json").then(function(resp)
             pointStyle: "rect",
             borderWidth: 2,
             radius: 1,
-            lineTension: 0.0,
+            lineTension: 0.2,
             data: []
         }]
     }
@@ -58,7 +58,6 @@ fetch("/online/json_data.json").then(function(resp)
     var myLineChart = new Chart(ctx, {
 
         type: 'line',
-        draggable: true,
         data: data,
         options: {
             events: ["mousemove", "touchstart", "touchmove", "click"],

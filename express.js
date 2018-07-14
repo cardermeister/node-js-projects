@@ -32,6 +32,8 @@ app.get('/', function(req, res) {
 	{
 		res.write('hello ' + req.user.username)
 		res.write('<a href="/logout">[logout]</a>')
+		res.write('<br><a href="/online">/online</a>')
+		res.write('<br><a href="/console">/console</a>')
 	}
 	else
 	{
@@ -67,15 +69,19 @@ app.get('/online', function (req, res, next) {
 	res.sendFile('express/online.html' , { root : __dirname});
 });
 
+app.get('/online2', function (req, res, next) {
+	res.sendFile('express/online2.html' , { root : __dirname});
+});
+
 app.get('/online/json_data.json', function (req, res, next) {
 	fs.readFile('/home/card/wirebuild/garrysmod/data/iin/logs/online.txt', (err, jdata) => {	
-			res.end(jdata)
+		res.end(jdata)
 	});
 });
 
 function check_auth(req,res)
 {
-	if ((req.user == null) || (req.user.steamid!="76561198005221681" && req.user.steamid!="76561198041202334")) {
+	if ((req.user == null) || (req.user.steamid!="76561198058802011" && req.user.steamid!="76561198005221681" && req.user.steamid!="76561198041202334")) {
 		res.redirect('/');
 		res.end();
 		return false
@@ -88,11 +94,15 @@ app.get('/console', function (req, res, next) {
 	if(check_auth(req, res))
 	{
 		fs.readFile('/home/card/wirebuild/screenlog.0', (err, log) => {	
-			res.set('Content-Type', 'text/html');
-			res.write('<meta charset="utf-8">')
-			res.write('<style>body{white-space: pre-wrap; font-family:"consolas"; background-color:black; color:green;}</style>')
-			res.write(log)
-			res.end()
+			if (err) {fs.truncate('/home/card/wirebuild/screenlog.0', 0, function(){console.log('file too big')})}
+			else
+			{
+				res.set('Content-Type', 'text/html');
+				res.write('<meta charset="utf-8">')
+				res.write('<style>body{white-space: pre-wrap; font-family:"consolas"; background-color:black; color:green;}</style>')
+				res.write("<plaintext>"+log)
+				res.end()
+			}
 		});
 	}
 });

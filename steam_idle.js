@@ -61,14 +61,44 @@ steamClient.on('logOnResponse', function(logonResp)
 				game_port: 27015,
 			},
 			{
-				game_id: '204360',
+				game_id: '270550',
 			},
 			{
-				game_id: '331470',
+				game_id: '513780',
 			},
 			{
-				game_id: '241930',
+				game_id: '265590',
 			},
+			{
+				game_id: '65930',
+			},
+			{
+				game_id: '439190',
+			},
+			{
+				game_id: '234650',
+			},
+			{
+				game_id: '41070',
+			},
+			{
+				game_id: '34270',
+			},
+			{
+				game_id: '268870',
+			},
+			{
+				game_id: '210770',
+			},
+			{
+				game_id: '449630',
+			},
+			{
+				game_id: '334210',
+			},
+			{
+				game_id: '318600',
+			}
 		]});
 	}
 });
