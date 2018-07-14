@@ -1,0 +1,141 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.min.js"></script>
+<script src="/public/chartjs-plugin-zoom.min.js"></script>
+
+<div class="chart-container" style="height:60%; width: 95% !important">
+    <button onclick="resetZoom()">Reset Zoom | R</button>
+    <canvas id="myChart"></canvas>
+</div>
+
+<script>
+function addZero(i) {
+    if (i < 10) {
+        i = "0" + i;
+    }
+    return i;
+}
+
+fetch("/online/json_data.json").then(function(resp)
+{
+    return resp.json()
+}).then(function(json_data){
+
+    var ctx = document.getElementById("myChart");
+    var gei_table = json_data
+
+    var data =
+    {
+        labels: [], 
+        datasets: [{
+            label: 'online',
+            borderColor: 'rgba( 68,112,146,1)',
+            backgroundColor: 'rgba( 68,112,146,0.5)',
+            pointBackgroundColor: 'rgba( 138,0,255,1)',
+            pointBorderColor: 'rgba( 138,0,255,1)',
+            pointStyle: "rect",
+            borderWidth: 2,
+            radius: 1,
+            lineTension: 0.2,
+            data: []
+        }]
+    }
+
+    var g_players = {}
+
+    for (var Elem in gei_table) {
+
+        var time = gei_table[Elem].time
+        var players = gei_table[Elem].players
+
+        var date = new Date();
+        date.setTime(time*1000)
+        var temp_data = date
+        g_players[Elem] = players
+
+        data.labels.push(temp_data)
+        data.datasets[0].data.push(players.length)
+    }
+
+    var myLineChart = new Chart(ctx, {
+
+        type: 'line',
+        data: data,
+        options: {
+            events: ["mousemove", "touchstart", "touchmove", "click"],
+            responsive:true,
+            maintainAspectRatio: false,
+            tooltips: {
+                callbacks: {
+                    footer: function(tooltipItem){
+                    
+                        var val = []
+                        for (var i in g_players[tooltipItem[0].index]) {
+                            var row = (g_players[tooltipItem[0].index][i])
+                            val.push("● "+row.name)
+                        }
+                        return val
+                    },
+                    label: function(tooltipItem, data) {
+                        var label = data.datasets[tooltipItem.datasetIndex].label || '';
+
+                        if (label) {
+                            label += ': ';
+                        }
+                        label += Math.round(tooltipItem.yLabel * 100) / 100;
+                        return label;
+                    }
+                }
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true,
+                        stepSize: 1,
+                    },
+                    scaleLabel: {
+    					display: true,
+    					labelString: '#Players'
+    				}
+                }],
+                xAxes: [{
+                    type: 'time',
+                    time: {
+    					tooltipFormat: 'll HH:mm',
+                        distribution:'linear',
+                        unit: 'minute',
+                        displayFormats: {
+                            minute: 'H:mm',
+                        },
+                        scaleLabel: {
+    							display: true,
+    							labelString: 'Date'
+    					},
+    					ticks: {
+    						maxRotation: 0
+    					}
+                    }
+                }]
+            },
+            zoom: {
+    			enabled: true,
+    			//drag: true,
+    			mode: 'x',
+    			limits: {
+    				max: 10,
+    				min: 0.5
+    			}
+    		}
+        } 
+    });
+
+    function resetZoom() {
+    	myLineChart.resetZoom()
+    }
+
+    document.onkeyup = function(e) {
+        if (e.which == 82) {
+            resetZoom()
+        }
+    };
+
+})
+</script>

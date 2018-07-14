@@ -28,16 +28,18 @@ app.get('/', function(req, res) {
 
 	res.set('Content-Type', 'text/html');
 	res.write('<meta charset="utf-8">')
+	res.write('<br><a href="/online">/online</a>')
+	res.write('<br><a href="/online2">/online2</a>')
+
 	if(req.user)
 	{
-		res.write('hello ' + req.user.username)
-		res.write('<a href="/logout">[logout]</a>')
-		res.write('<br><a href="/online">/online</a>')
 		res.write('<br><a href="/console">/console</a>')
+		res.write('<br><a href="/logout">[logout]</a>')
+		res.write('<br>hello ' + req.user.username)
 	}
 	else
 	{
-		res.write('<a href="/authenticate"><img src="https://steamcdn-a.akamaihd.net/steamcommunity/public/images/steamworks_docs/english/sits_small.png"></a>')
+		res.write('<br><a href="/authenticate"><img src="https://steamcdn-a.akamaihd.net/steamcommunity/public/images/steamworks_docs/english/sits_small.png"></a>')
 	}
 	res.end()
 
