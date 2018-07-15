@@ -7,7 +7,7 @@
     }																	
 </style>
     
-    <!-- Resources -->
+<!-- Resources -->
 <script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
 <script src="https://www.amcharts.com/lib/3/serial.js"></script>
 <script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
@@ -23,7 +23,7 @@ fetch("/online/json_data.json").then(function(resp)
     return resp.json()
 }).then(function(json_data){
 
-    
+    var g_players = []    
     var chartData = []
 
     for (var Elem in json_data)
@@ -34,37 +34,17 @@ fetch("/online/json_data.json").then(function(resp)
         var date = new Date();
         date.setTime(time*1000)
         var temp_data = date
-
-        var g_players = ""
-        for (var i in players) {
-            var row = players[i]
-            g_players+=(row.name+"<br>")
-        }
         
+        g_players[Elem] = players
 
         chartData.push({
                 date: temp_data,
                 players_num: players.length,
-                pidors: g_players,
         });
 
     }
 
-    console.log(chartData)
-
-    AmCharts.monthNames = [
-        'Января',
-        'Февраля',
-        'Марта',
-        'Апреля',
-        'Мая',
-        'Июня',
-        'Июля',
-        'Августа',
-        'Хуйтября',
-        'Октября',
-        'Ноября',
-        'Декабря'];
+    AmCharts.monthNames = ['Января','Февраля','Марта','Апреля','Мая','Июня','Июля','Августа','Хуйтября','Октября','Ноября','Декабря'];
 
     var chart = AmCharts.makeChart("chartdiv", {
         "type": "serial",
@@ -85,12 +65,21 @@ fetch("/online/json_data.json").then(function(resp)
         "mouseWheelZoomEnabled": true,
         "graphs": [{
             "id": "g1",
-            "balloonText": "<div style='margin:5px; font-size:12px;'><b>Total:[[players_num]]</b><br>[[pidors]]</div>",
+            balloonFunction: function(graphDataItem, graph) {
+                var id = graphDataItem.index;
+                var ret = ""
+                for (var i in g_players[id]) {
+                    var row = g_players[id][i]
+                    var weird_bool = id>1 ? g_players[id-1].some(function(el){return el.cid == row.cid}) : true
+                    ret+=( (weird_bool==false ? "<font size=3 face='consolas' color=#3CB371>":"<font size=3 face='consolas'>") + row.name + "</font><br>")
+                }
+                return ret  
+            },
             "bullet": "round",
             "bulletBorderAlpha": 0.1,
             "bulletColor": "#FFFFFF",
             "hideBulletsCount": 50,
-            "title": "red line",
+            "title": "wirebuild",
             "valueField": "players_num",
             "useLineColorForBulletBorder": true,
             "balloon":{
@@ -123,16 +112,9 @@ fetch("/online/json_data.json").then(function(resp)
     chart.addListener("rendered", zoomChart);
     zoomChart();
 
-    // this method is called when chart is first inited as we listen for "rendered" event
     function zoomChart() {
-        // different zoom methods can be used - zoomToIndexes, zoomToDates, zoomToCategoryValues
         chart.zoomToIndexes(chartData.length - 40, chartData.length - 1);
     }
-
-
-    // generate some random data, quite different range
-
-    // generate some random data, quite different rang
 })
 </script>
 

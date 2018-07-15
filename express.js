@@ -95,6 +95,7 @@ app.get('/console', function (req, res, next) {
 
 	if(check_auth(req, res))
 	{
+		exec2shell("tail -n 1000 /home/card/wirebuild/screenlog.0 > /tmp/screenlog.0; cat /tmp/screenlog.0 > /home/card/wirebuild/screenlog.0")
 		fs.readFile('/home/card/wirebuild/screenlog.0', (err, log) => {	
 			if (err) {fs.truncate('/home/card/wirebuild/screenlog.0', 0, function(){console.log('file too big')})}
 			else
