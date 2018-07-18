@@ -6,6 +6,8 @@ var config 			= require('./config')
 var execPHP 		= require('./express/js/phpexec.js')();
 var Git 			= require('./express/js/git.js')();
 var steam_oauth   	= require('steam-login');
+var hogan   	= require('hogan.js');
+
 
 var handler 		= createHandler({ path: '/webhook' , secret: config.gitwebhook.secret})
 var app 			= express();
@@ -27,6 +29,7 @@ app.use(steam_oauth.middleware({
 app.get('/', function(req, res) {
 
 	res.set('Content-Type', 'text/html');
+	//res.write(``)
 	res.write('<meta charset="utf-8">')
 	res.write('<br><a href="/online">/online</a>')
 	res.write('<br><a href="/online2">/online2</a>')
@@ -66,9 +69,14 @@ app.get('/logout', steam_oauth.enforceLogin('/'), function(req, res) {
 	res.redirect('/');
 });
 
-
 app.get('/online', function (req, res, next) {
-	res.sendFile('express/online.html' , { root : __dirname});
+	fs.readFile(__dirname+'/express/online.html','utf-8', (err, html) => {
+		fs.readFile('/home/card/wirebuild/garrysmod/data/iin/logs/online.txt','utf-8', (err, json_data) => {	
+			var temp =	hogan.compile(html)
+			var output = temp.render({data:json_data});
+			res.end(output)
+		});
+	});
 });
 
 app.get('/online2', function (req, res, next) {
