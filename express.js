@@ -73,19 +73,19 @@ app.get('/online', function (req, res, next) {
 	fs.readFile(__dirname+'/express/online.html','utf-8', (err, html) => {
 		fs.readFile('/home/card/wirebuild/garrysmod/data/iin/logs/online.txt','utf-8', (err, json_data) => {	
 			var temp =	hogan.compile(html)
-			var output = temp.render({data:json_data});
+			var output = temp.render({data:json_data,version:1});
 			res.end(output)
 		});
 	});
 });
 
 app.get('/online2', function (req, res, next) {
-	res.sendFile('express/online2.html' , { root : __dirname});
-});
-
-app.get('/online/json_data.json', function (req, res, next) {
-	fs.readFile('/home/card/wirebuild/garrysmod/data/iin/logs/online.txt', (err, jdata) => {	
-		res.end(jdata)
+	fs.readFile(__dirname+'/express/online.html','utf-8', (err, html) => {
+		fs.readFile('/home/card/wirebuild/garrysmod/data/iin/logs/online2.txt','utf-8', (err, json_data) => {	
+			var temp =	hogan.compile(html)
+			var output = temp.render({data:json_data,version:2});
+			res.end(output)
+		});
 	});
 });
 

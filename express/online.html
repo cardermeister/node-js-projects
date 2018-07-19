@@ -56,23 +56,72 @@ i__p__ /  |  ##############  | | ####### |__l___xp____| ooooo |      |~~~~|
 <!-- Chart code -->
 
 <script>
-var g_players = []    
+var g_players = []
 var chartData = []
-for (var Elem in json_data)
+
+var ver = {{{version}}}
+
+if(ver==2)
 {
-    var time = json_data[Elem].time
-    var players = json_data[Elem].players
-    
-    var date = new Date();
-    date.setTime(time*1000)
-    var temp_data = date
-    
-    g_players[Elem] = players
-    chartData.push({
-            date: temp_data,
-            players_num: players.length,
-    });
+    for (var Elem in json_data)
+    {
+        var time = json_data[Elem].time
+        var players = json_data[Elem].players
+
+        var date = new Date();
+        date.setTime(time*1000)
+        var temp_data = date
+
+        g_players[Elem] = players
+        chartData.push({
+                date: temp_data,
+                players_num: players.length,
+        });
+    }
 }
+else if (ver==1)
+{
+    for (var Elem in json_data)
+    {
+        var time = json_data[Elem].t,
+            name = json_data[Elem].n ,
+            cid = json_data[Elem].c,
+            disconnect = json_data[Elem].d
+
+
+        var date = new Date();
+        date.setTime(time*1000)
+
+        if(Elem>0)
+        {
+            g_players[Elem] = g_players[Elem-1].slice()
+
+            if (disconnect)
+            {
+                g_players[Elem].forEach(function(item,pos) {
+                    if(item.cid==cid)g_players[Elem].splice(pos, 1)
+                }); 
+            }
+            else
+            {
+                g_players[Elem].push({cid: cid,name:name})
+            }   
+        }
+        else
+        {
+            if(!disconnect) g_players[Elem] = [{cid: cid,name:name}]
+            else g_players[Elem] = []
+        }
+
+        chartData.push({
+                date: date,
+                players_num: g_players[Elem].length,
+        });
+    }
+}
+
+
+
 AmCharts.monthNames = ['Января','Февраля','Марта','Апреля','Мая','Июня','Июля','Августа','Хуйтября','Октября','Ноября','Декабря'];
 var chart = AmCharts.makeChart("chartdiv", {
     "type": "serial",
