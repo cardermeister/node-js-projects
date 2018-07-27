@@ -6,7 +6,7 @@ var config 			= require('./config')
 var execPHP 		= require('./express/js/phpexec.js')();
 var Git 			= require('./express/js/git.js')();
 var steam_oauth   	= require('steam-login');
-var hogan   	= require('hogan.js');
+var hogan   		= require('hogan.js');
 
 
 var handler 		= createHandler({ path: '/webhook' , secret: config.gitwebhook.secret})
@@ -124,9 +124,18 @@ for (user in config.steam_secret)
 {
 	app.get(user,function(req,res)
 	{
-		console.log(req.route.path)
+		res.set('Content-Type', 'text/html');
+		res.write('<meta charset="utf-8">')
+
+		if(req.route.path=="/me")
+		{
+			for (user in config.steam_secret)
+			{
+				res.write("[<a style='color: hotpink;' href='"+user+"'>"+user+"/</a>]")
+			}
+		}
 		var authCode = SteamTotp.getAuthCode(config.steam_secret[req.route.path]);
-		res.send(authCode)
+		res.end("<br>"+authCode)
 	})
 }
 
